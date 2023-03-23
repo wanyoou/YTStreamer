@@ -1,14 +1,8 @@
-use crate::proc;
-use tauri::Window;
-
-#[derive(Clone, serde::Serialize)]
-struct Payload {
-    progress_msg: String,
-}
+use crate::yt_dlp;
 
 #[tauri::command]
 pub fn start_download(target_url: &str) {
-    proc::invoke_yt_dlp(target_url);
+    yt_dlp::download(target_url);
 }
 
 #[tauri::command]

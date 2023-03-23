@@ -1,5 +1,5 @@
 mod commands;
-mod proc;
+mod yt_dlp;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {

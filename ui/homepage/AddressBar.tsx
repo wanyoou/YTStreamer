@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { open } from '@tauri-apps/api/dialog';
 
@@ -38,16 +38,6 @@ function FormSvg(props: { className: string; viewBox: string; children: any }) {
 
 const AddressBar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    import('@tauri-apps/api/window').then(async ({ appWindow }) => {
-      const unlistenProgress = await appWindow.listen(
-        'download_progress',
-        ({ event, payload }) => console.log(payload),
-      );
-      await invoke('emit_progress', { window: appWindow });
-    });
-  }, []);
 
   async function handleDownload() {
     await invoke('start_download', { targetUrl: inputRef.current?.value });
