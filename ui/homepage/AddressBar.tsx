@@ -40,7 +40,11 @@ const AddressBar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleDownload() {
-    await invoke('start_download', { targetUrl: inputRef.current?.value });
+    let { appWindow } = await import('@tauri-apps/api/window');
+    await invoke('start_download', {
+      window: appWindow,
+      targetUrl: inputRef.current?.value,
+    });
   }
 
   return (
