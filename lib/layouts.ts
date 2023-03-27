@@ -8,7 +8,7 @@ type Item = {
   }[];
 };
 
-export const demos: Item[] = [
+export const layouts: Item[] = [
   {
     name: 'Layouts',
     items: [
@@ -34,10 +34,9 @@ export const demos: Item[] = [
           'Preview the hooks available for Client and Server Components',
       },
       {
-        name: 'Client Context',
-        slug: 'context',
-        description:
-          'Pass context between Client Components that cross Server/Client Component boundary',
+        name: 'Settings',
+        slug: 'settings',
+        description: 'YTStreamer application settings',
       },
     ],
   },

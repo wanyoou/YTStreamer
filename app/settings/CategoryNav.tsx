@@ -5,19 +5,18 @@ import { TabNavItem } from '@/ui/TabNavItem';
 import { useSelectedLayoutSegments } from 'next/navigation';
 
 const CategoryNav = ({ categories }: { categories: Category[] }) => {
-  // TODO: check useSelectedLayoutSegments
   const [selectedLayoutSegments] = useSelectedLayoutSegments();
 
   return (
     <div className="flex items-center space-x-4">
-      <TabNavItem href="/context" isActive={!selectedLayoutSegments}>
-        Home
+      <TabNavItem href="/settings" isActive={!selectedLayoutSegments}>
+        General
       </TabNavItem>
 
       {categories.map((item) => (
         <TabNavItem
           key={item.slug}
-          href={`/context/${item.slug}`}
+          href={`/settings/${item.slug}`}
           isActive={item.slug === selectedLayoutSegments}
         >
           {item.name}

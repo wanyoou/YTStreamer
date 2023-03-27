@@ -1,6 +1,5 @@
 import { use } from 'react';
 import { fetchCategoryBySlug, type PageProps } from '@/lib/getCategories';
-import ClickCounter from '@/ui/ClickCounter';
 
 import SubCategoryNav from './SubCategoryNav';
 
@@ -13,9 +12,6 @@ export default function Layout({ children, params }: PageProps) {
       <div>
         <div className="flex items-center justify-between">
           <SubCategoryNav category={category} />
-          <div>
-            <ClickCounter />
-          </div>
         </div>
       </div>
 

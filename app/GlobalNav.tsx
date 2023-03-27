@@ -1,6 +1,6 @@
 'use client';
 
-import { demos } from '@/lib/demos';
+import { layouts } from '@/lib/layouts';
 import clsx from 'clsx';
 import { useSelectedLayoutSegments } from 'next/navigation';
 import Link from 'next/link';
@@ -10,14 +10,14 @@ export default function GlobalNav() {
 
   return (
     <div className="space-y-5">
-      {demos.map((demo) => {
+      {layouts.map((layout) => {
         return (
-          <div key={demo.name}>
+          <div key={layout.name}>
             <div className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-              <div>{demo.name}</div>
+              <div>{layout.name}</div>
             </div>
 
-            {demo.items.map((item) => {
+            {layout.items.map((item) => {
               const isActive = item.slug === selectedLayoutSegments;
 
               return (

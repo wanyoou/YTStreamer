@@ -1,7 +1,6 @@
 import { use } from 'react';
 import { fetchCategories } from '@/lib/getCategories';
 import { Boundary } from '@/ui/Boundary';
-import ClickCounter from '@/ui/ClickCounter';
 import HooksClient from '@/ui/HooksClient';
 // These are not yet implemented in Next.js v13 w/Turbopack
 // import HooksServer from '@/ui/HooksServer';
@@ -15,7 +14,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="space-y-9">
       <div className="flex items-center justify-between">
         <CategoryNav categories={categories} />
-        <ClickCounter />
       </div>
 
       <Boundary labels={['Client Component Hooks']}>
