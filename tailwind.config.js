@@ -6,8 +6,10 @@ module.exports = {
     './page/**/*.{js,ts,jsx,tsx}',
     './ui/**/*.{js,ts,jsx,tsx}',
   ],
-  plugins: [require("@tailwindcss/typography"), require("daisyui")],
+  plugins: [require('@tailwindcss/typography'), require('daisyui')],
   daisyui: {
-    themes: ["cupcake", "business"],
+    themes: ['cupcake', 'business'],
+    logs: false,
+    darkTheme: 'business',
   },
 };

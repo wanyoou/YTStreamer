@@ -13,36 +13,25 @@ export default function GlobalNav() {
       {layouts.map((layout) => {
         return (
           <div key={layout.name}>
-            <div className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-zinc-500">
-              <div>{layout.name}</div>
-            </div>
-
-            {layout.items.map((item) => {
-              const isActive = item.slug === selectedLayoutSegments;
+            {(() => {
+              const isActive = layout.slug === selectedLayoutSegments;
 
               return (
-                <div key={item.slug}>
-                  {item.isDisabled ? (
-                    <div
-                      className="block rounded-md px-3 py-2 text-sm font-medium text-zinc-600"
-                      title="Coming Soon"
-                    >
-                      {item.name}
-                    </div>
-                  ) : (
+                <div key={layout.slug}>
+                  {
                     <Link
-                      href={`/${item.slug}`}
+                      href={`/${layout.slug}`}
                       className={clsx(
                         'block rounded-md px-3 py-2 text-sm font-medium hover:bg-zinc-800 hover:text-zinc-100',
                         { 'text-zinc-400': !isActive, 'text-white': isActive },
                       )}
                     >
-                      {item.name}
+                      {layout.name}
                     </Link>
-                  )}
+                  }
                 </div>
               );
-            })}
+            })()}
           </div>
         );
       })}

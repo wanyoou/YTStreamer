@@ -7,5 +7,14 @@ export default function ThemesInit({
 }: {
   children: React.ReactNode;
 }) {
-  return <ThemeProvider attribute="class">{children}</ThemeProvider>;
+  return (
+    <ThemeProvider
+      defaultTheme="system"
+      attribute="data-theme"
+      themes={['cupcake', 'business']}
+      value={{ light: 'cupcake', dark: 'business' }}
+    >
+      {children}
+    </ThemeProvider>
+  );
 }

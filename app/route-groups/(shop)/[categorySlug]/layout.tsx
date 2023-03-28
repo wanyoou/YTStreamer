@@ -1,6 +1,5 @@
 import { use } from 'react';
 import { fetchCategoryBySlug, PageProps } from '@/lib/getCategories';
-import SubCategoryNav from './SubCategoryNav';
 
 export default function Layout({ children, params }: PageProps) {
   const category = use(fetchCategoryBySlug(params.categorySlug));
@@ -8,9 +7,6 @@ export default function Layout({ children, params }: PageProps) {
 
   return (
     <div className="space-y-9">
-      <div className="flex items-center justify-between">
-        <SubCategoryNav category={category} />
-      </div>
       <div>{children}</div>
     </div>
   );

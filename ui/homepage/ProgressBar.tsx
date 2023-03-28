@@ -17,7 +17,7 @@ export default function ProgressBar() {
   const [downloaded, setDownloaded] = useState('');
   const [total, setTotal] = useState('');
   const [speed, setSpeed] = useState('');
-  const [progress, setProgress] = useState('');
+  const [progress, setProgress] = useState('0');
 
   async function updateStatus(payload: ProgressMsgEvent) {
     setTitle(payload.title);
@@ -48,23 +48,27 @@ export default function ProgressBar() {
   }, []);
 
   return (
-    <div className="dark:text-white">
-      <div className="flex justify-between mb-1">
-        <span className="text-sm font-medium text-blue-700 dark:text-white">
+    <div className="w-full max-w-xs">
+      <label className="label">
+        <span className="label-text">
           {title.length > 20 ? title.slice(0, 20) + '......' : title}
         </span>
-        <span className="text-sm font-medium text-blue-700 dark:text-white">
-          {(downloaded ? downloaded + ' / ' : downloaded) +
+        <span className="label-text">
+          {(downloaded
+            ? downloaded !== total
+              ? downloaded + ' / '
+              : null
+            : downloaded) +
             total +
             (speed ? '  ' + speed : speed)}
         </span>
-      </div>
-      <div className="w-full bg-gray-200 rounded-full h-3 dark:bg-gray-700">
+      </label>
+      <div className="bg-gray-200 rounded-full w-full h-3">
         <div
-          className="bg-green-600 text-xs font-medium text-blue-100 text-center leading-none rounded-full h-3"
+          className="bg-green-600 text-xs font-medium text-center text-white leading-none rounded-full h-3"
           style={{ width: `${progress}` }}
         >
-          {progress}
+          {progress > '0' ? progress : ''}
         </div>
       </div>
     </div>
