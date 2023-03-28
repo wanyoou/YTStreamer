@@ -48,12 +48,12 @@ export default function ProgressBar() {
   }, []);
 
   return (
-    <div className="w-full max-w-xs">
+    <div className="w-full">
       <label className="label">
-        <span className="label-text">
+        <span className="label-text text-sm">
           {title.length > 20 ? title.slice(0, 20) + '......' : title}
         </span>
-        <span className="label-text">
+        <span className="label-text text-sm">
           {(downloaded
             ? downloaded !== total
               ? downloaded + ' / '
@@ -63,13 +63,15 @@ export default function ProgressBar() {
             (speed ? '  ' + speed : speed)}
         </span>
       </label>
-      <div className="bg-gray-200 rounded-full w-full h-3">
-        <div
-          className="bg-green-600 text-xs font-medium text-center text-white leading-none rounded-full h-3"
-          style={{ width: `${progress}` }}
-        >
-          {progress > '0' ? progress : ''}
-        </div>
+      <div className="grid place-items-center">
+        <progress
+          className="progress progress-success w-full bg-zinc-200 rounded-full h-3 col-start-1 row-start-1"
+          value={progress}
+          max="100"
+        />
+        <span className="label-text text-xs font-medium text-white col-start-1 row-start-1 z-20">
+          {progress > '0' ? progress : null}
+        </span>
       </div>
     </div>
   );
