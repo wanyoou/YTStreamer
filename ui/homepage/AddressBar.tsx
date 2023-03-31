@@ -16,8 +16,8 @@ const AddressBar = () => {
 
   return (
     <div className="flex-col space-y-4 w-full">
-      <div className="form-control relative w-full">
-        <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+      <label className="relative block">
+        <span className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
           <svg
             className="fill-current w-5 h-5"
             xmlns="http://www.w3.org/2000/svg"
@@ -29,14 +29,14 @@ const AddressBar = () => {
         </span>
         <input
           type="text"
-          placeholder="Paste url here"
+          placeholder="Paste url here..."
           ref={inputRef}
-          className="input input-bordered rounded-full w-full pl-10 border-gray-300"
+          className="input input-bordered rounded-lg w-full py-2 pl-9 pr-3 shadow-sm border-gray-300 placeholder:italic placeholder:text-slate-400"
         />
-      </div>
+      </label>
       <textarea
-        placeholder="Paste urls here"
-        className="textarea textarea-bordered textarea-md rounded-lg w-full"
+        placeholder="Paste urls here..."
+        className="textarea textarea-bordered textarea-md rounded-lg w-full placeholder:italic placeholder:text-slate-400"
       />
     </div>
   );
