@@ -8,7 +8,6 @@ module.exports = {
   ],
   plugins: [require('@tailwindcss/typography'), require('daisyui')],
   daisyui: {
-    styled: false,
     themes: ['cupcake', 'business'],
     logs: false,
     darkTheme: 'business',

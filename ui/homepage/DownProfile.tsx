@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { open } from '@tauri-apps/api/dialog';
 
 export default function DownProfile() {
   const [path, setPath] = useState('');
+  const [videoDirPath, setVideoDirPath] = useState('');
+  const [thread, setThread] = useState('1');
 
   async function selectDownPath() {
     const selected = await open({
@@ -18,14 +20,23 @@ export default function DownProfile() {
     }
   }
 
+  async function setVideoDir() {
+    let { videoDir } = await import('@tauri-apps/api/path');
+    setVideoDirPath(await videoDir());
+  }
+
+  useEffect(() => {
+    setVideoDir();
+  }, []);
+
   return (
     <div className="grid grid-cols-6 gap-4">
-      <div className="form-control col-span-4">
+      <div className="form-control col-span-3">
         <label className="input-group input-group-sm flex">
-          <span className="label-text text-sm font-medium">Saved to</span>
+          <span className="label-text text-sm">Saved to</span>
           <input
             type="text"
-            placeholder="10"
+            placeholder={videoDirPath}
             value={path}
             onChange={(e) => setPath(e.target.value)}
             className="input input-bordered input-sm grow"
@@ -41,6 +52,29 @@ export default function DownProfile() {
             </svg>
           </span>
         </label>
+      </div>
+
+      <div className="form-control col-span-1">
+        <input
+          type="range"
+          min="1"
+          max="32"
+          value={thread}
+          onChange={(e) => setThread(e.target.value)}
+          className="range range-xs"
+        />
+      </div>
+
+      <div className="divider col-start-1 col-end-7">
+        <button className="btn">test</button>
+      </div>
+
+      <div className="collapse col-start-1 col-end-7">
+        <input type="checkbox" className="peer" />
+        <div className="collapse-title">Click me to show/hide content</div>
+        <div className="collapse-content">
+          <p>hello</p>
+        </div>
       </div>
     </div>
   );
