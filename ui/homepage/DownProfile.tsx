@@ -3,10 +3,28 @@
 import { useState, useEffect } from 'react';
 import { open } from '@tauri-apps/api/dialog';
 
+function MoreOptions() {
+  const [thread, setThread] = useState('1');
+
+  return (
+    <div className="grid grid-cols-6 gap-4">
+      <div className="form-control col-span-1">
+        <input
+          type="range"
+          min="1"
+          max="32"
+          value={thread}
+          onChange={(e) => setThread(e.target.value)}
+          className="range range-xs"
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function DownProfile() {
   const [path, setPath] = useState('');
   const [videoDirPath, setVideoDirPath] = useState('');
-  const [thread, setThread] = useState('1');
 
   async function selectDownPath() {
     const selected = await open({
@@ -54,27 +72,43 @@ export default function DownProfile() {
         </label>
       </div>
 
-      <div className="form-control col-span-1">
-        <input
-          type="range"
-          min="1"
-          max="32"
-          value={thread}
-          onChange={(e) => setThread(e.target.value)}
-          className="range range-xs"
-        />
-      </div>
-
-      <div className="divider col-start-1 col-end-7">
-        <button className="btn">test</button>
-      </div>
-
-      <div className="collapse col-start-1 col-end-7">
-        <input type="checkbox" className="peer" />
-        <div className="collapse-title">Click me to show/hide content</div>
-        <div className="collapse-content">
-          <p>hello</p>
-        </div>
+      <div className="relative justify-center items-center col-start-1 col-end-7">
+        <hr className="my-3 h-0.5 border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:opacity-100" />
+        <label className="btn btn-xs btn-outline w-1/5 absolute inset-y-0 inset-x-80 z-10 swap">
+          <input type="checkbox" />
+          <div className="swap-off flex items-center gap-x-2">
+            <span className="label-text">More</span>
+            <svg
+              className="fill-current w-5 h-5 pt-0.5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 1024 1024"
+              stroke="currentColor"
+            >
+              <path
+                d="M932.331207 355.808682l-82.797751-78.876442c-12.026918-11.495822-30.987758-11.531638-42.379203-0.109494L463.235366 597.451184c-11.383258 11.379165-10.828626 29.934776 1.206478 41.387619l82.772168 78.902024c12.036128 11.495822 31.013341 11.522428 42.379203 0.143263l343.927073-320.662207C944.894338 385.826346 944.366312 367.287107 932.331207 355.808682z"
+                fill="#707070"
+              />
+              <path
+                d="M174.092014 270.492574l-82.601276 80.756255c-12.001335 11.733229-12.311397 30.467919-0.689708 41.813315l402.142963 378.813628c11.639085 11.388375 30.804586 11.05273 42.804898-0.654916l82.601276-80.738859c12.001335-11.742439 12.311397-30.467919 0.672312-41.839921L216.888725 269.845845C205.249641 258.45747 186.084139 258.758322 174.092014 270.492574z"
+                fill="#707070"
+              />
+            </svg>
+          </div>
+          <div className="swap-on flex items-center gap-x-2">
+            <span className="label-text">Fold</span>
+            <svg
+              className="fill-current w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 1024 1024"
+              stroke="currentColor"
+            >
+              <path
+                d="M510.198 212.699l-480.758 480.724 116.156 111.201 369.447-369.489 359.719 384.13 118.599-118.523-483.161-488.043z"
+                fill="#707070"
+              />
+            </svg>
+          </div>
+        </label>
       </div>
     </div>
   );
