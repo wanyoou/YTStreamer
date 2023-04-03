@@ -25,6 +25,8 @@ function MoreOptions() {
 export default function DownProfile() {
   const [path, setPath] = useState('');
   const [videoDirPath, setVideoDirPath] = useState('');
+  const [filename, setFilename] = useState('');
+  const [showMore, setShowMore] = useState(false);
 
   async function selectDownPath() {
     const selected = await open({
@@ -72,6 +74,41 @@ export default function DownProfile() {
         </label>
       </div>
 
+      <div className="form-control relative col-span-3">
+        <label className="input-group input-group-sm flex">
+          <span className="label-text text-sm">Filename</span>
+          <input
+            type="text"
+            placeholder="%(title)s.%(ext)s"
+            value={filename}
+            onChange={(e) => setFilename(e.target.value)}
+            className="input input-bordered input-sm grow ps-1 pe-16"
+          />
+        </label>
+        <div className="dropdown dropdown-bottom dropdown-end bg-neutral-300 absolute end-0 w-1/6 h-full rounded-r-full flex justify-center items-center cursor-pointer">
+          <svg
+            tabIndex={0}
+            className="fill-current w-5 h-5"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1024 1024"
+            stroke="currentColor"
+          >
+            <path d="M227.14123 413.647995c-52.14973 0-94.587262 42.439578-94.587262 94.587262 0 52.14973 42.437531 94.587262 94.587262 94.587262 52.147684 0 94.587262-42.437531 94.587262-94.587262C321.728492 456.087573 279.288914 413.647995 227.14123 413.647995z" />
+            <path d="M510.903016 413.647995c-52.14973 0-94.587262 42.439578-94.587262 94.587262 0 52.14973 42.437531 94.587262 94.587262 94.587262 52.147684 0 94.587262-42.437531 94.587262-94.587262C605.490278 456.087573 563.051723 413.647995 510.903016 413.647995z" />
+            <path d="M794.665825 413.647995c-52.14973 0-94.587262 42.439578-94.587262 94.587262 0 52.14973 42.437531 94.587262 94.587262 94.587262 52.147684 0 94.587262-42.437531 94.587262-94.587262C889.253086 456.087573 846.813508 413.647995 794.665825 413.647995z" />
+          </svg>
+          <div
+            tabIndex={0}
+            className="dropdown-content card card-compact w-64 p-2 shadow bg-primary text-primary-content"
+          >
+            <div className="card-body">
+              <h3 className="card-title">Card title!</h3>
+              <p>you can use any element as a dropdown.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="relative justify-center items-center col-start-1 col-end-7">
         <hr className="my-3 h-0.5 border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:opacity-100" />
         <label className="btn btn-xs btn-outline w-1/5 absolute inset-y-0 inset-x-80 z-10 swap">
@@ -84,14 +121,8 @@ export default function DownProfile() {
               viewBox="0 0 1024 1024"
               stroke="currentColor"
             >
-              <path
-                d="M932.331207 355.808682l-82.797751-78.876442c-12.026918-11.495822-30.987758-11.531638-42.379203-0.109494L463.235366 597.451184c-11.383258 11.379165-10.828626 29.934776 1.206478 41.387619l82.772168 78.902024c12.036128 11.495822 31.013341 11.522428 42.379203 0.143263l343.927073-320.662207C944.894338 385.826346 944.366312 367.287107 932.331207 355.808682z"
-                fill="#707070"
-              />
-              <path
-                d="M174.092014 270.492574l-82.601276 80.756255c-12.001335 11.733229-12.311397 30.467919-0.689708 41.813315l402.142963 378.813628c11.639085 11.388375 30.804586 11.05273 42.804898-0.654916l82.601276-80.738859c12.001335-11.742439 12.311397-30.467919 0.672312-41.839921L216.888725 269.845845C205.249641 258.45747 186.084139 258.758322 174.092014 270.492574z"
-                fill="#707070"
-              />
+              <path d="M932.331207 355.808682l-82.797751-78.876442c-12.026918-11.495822-30.987758-11.531638-42.379203-0.109494L463.235366 597.451184c-11.383258 11.379165-10.828626 29.934776 1.206478 41.387619l82.772168 78.902024c12.036128 11.495822 31.013341 11.522428 42.379203 0.143263l343.927073-320.662207C944.894338 385.826346 944.366312 367.287107 932.331207 355.808682z" />
+              <path d="M174.092014 270.492574l-82.601276 80.756255c-12.001335 11.733229-12.311397 30.467919-0.689708 41.813315l402.142963 378.813628c11.639085 11.388375 30.804586 11.05273 42.804898-0.654916l82.601276-80.738859c12.001335-11.742439 12.311397-30.467919 0.672312-41.839921L216.888725 269.845845C205.249641 258.45747 186.084139 258.758322 174.092014 270.492574z" />
             </svg>
           </div>
           <div className="swap-on flex items-center gap-x-2">
@@ -102,10 +133,7 @@ export default function DownProfile() {
               viewBox="0 0 1024 1024"
               stroke="currentColor"
             >
-              <path
-                d="M510.198 212.699l-480.758 480.724 116.156 111.201 369.447-369.489 359.719 384.13 118.599-118.523-483.161-488.043z"
-                fill="#707070"
-              />
+              <path d="M510.198 212.699l-480.758 480.724 116.156 111.201 369.447-369.489 359.719 384.13 118.599-118.523-483.161-488.043z" />
             </svg>
           </div>
         </label>
