@@ -23,7 +23,7 @@ tauri-build = { version = "^2.0.0-alpha.2", features = [] }
 [dependencies]
 serde_json = "^1.0"
 serde = { version = "^1.0", features = ["derive"] }
-tauri = { version = "^2.0.0-alpha.4", features = ["dialog-all", "path-all"] }
+tauri = { version = "^2.0.0-alpha.4", features = ["dialog-all", "path-all", "window-set-min-size"] }
 futures = "^0.3.27"
 
 [features]

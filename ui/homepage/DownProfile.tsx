@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { open } from '@tauri-apps/api/dialog';
+import { outputTemplate } from '@/lib/outputTemplate';
 
 function MoreOptions() {
   const [thread, setThread] = useState('1');
@@ -51,27 +52,30 @@ export default function DownProfile() {
 
   return (
     <div className="grid grid-cols-6 gap-4">
-      <div className="form-control col-span-3">
+      <div className="form-control relative col-span-3">
         <label className="input-group input-group-sm flex">
-          <span className="label-text text-sm">Saved to</span>
+          <span className="label-text text-sm">Path</span>
           <input
             type="text"
             placeholder={videoDirPath}
             value={path}
             onChange={(e) => setPath(e.target.value)}
-            className="input input-bordered input-sm grow"
+            className="input input-bordered input-sm grow ps-1 pe-16"
           />
-          <span className="cursor-pointer" onClick={selectDownPath}>
-            <svg
-              className="fill-current w-5 h-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 1024 1024"
-              stroke="currentColor"
-            >
-              <path d="M921.6 450.133333c-6.4-8.533333-14.933333-12.8-25.6-12.8h-10.666667V341.333333c0-40.533333-34.133333-74.666667-74.666666-74.666666H514.133333c-4.266667 0-6.4-2.133333-8.533333-4.266667l-38.4-66.133333c-12.8-21.333333-38.4-36.266667-64-36.266667H170.666667c-40.533333 0-74.666667 34.133333-74.666667 74.666667v597.333333c0 6.4 2.133333 12.8 6.4 19.2 6.4 8.533333 14.933333 12.8 25.6 12.8h640c12.8 0 25.6-8.533333 29.866667-21.333333l128-362.666667c4.266667-10.666667 2.133333-21.333333-4.266667-29.866667zM170.666667 224h232.533333c4.266667 0 6.4 2.133333 8.533333 4.266667l38.4 66.133333c12.8 21.333333 38.4 36.266667 64 36.266667H810.666667c6.4 0 10.666667 4.266667 10.666666 10.666666v96H256c-12.8 0-25.6 8.533333-29.866667 21.333334l-66.133333 185.6V234.666667c0-6.4 4.266667-10.666667 10.666667-10.666667z m573.866666 576H172.8l104.533333-298.666667h571.733334l-104.533334 298.666667z" />
-            </svg>
-          </span>
         </label>
+        <div
+          onClick={selectDownPath}
+          className="bg-base-300 absolute end-0 w-1/6 h-full rounded-r-full flex justify-center items-center cursor-pointer"
+        >
+          <svg
+            className="fill-current w-5 h-5"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1024 1024"
+            stroke="currentColor"
+          >
+            <path d="M921.6 450.133333c-6.4-8.533333-14.933333-12.8-25.6-12.8h-10.666667V341.333333c0-40.533333-34.133333-74.666667-74.666666-74.666666H514.133333c-4.266667 0-6.4-2.133333-8.533333-4.266667l-38.4-66.133333c-12.8-21.333333-38.4-36.266667-64-36.266667H170.666667c-40.533333 0-74.666667 34.133333-74.666667 74.666667v597.333333c0 6.4 2.133333 12.8 6.4 19.2 6.4 8.533333 14.933333 12.8 25.6 12.8h640c12.8 0 25.6-8.533333 29.866667-21.333333l128-362.666667c4.266667-10.666667 2.133333-21.333333-4.266667-29.866667zM170.666667 224h232.533333c4.266667 0 6.4 2.133333 8.533333 4.266667l38.4 66.133333c12.8 21.333333 38.4 36.266667 64 36.266667H810.666667c6.4 0 10.666667 4.266667 10.666666 10.666666v96H256c-12.8 0-25.6 8.533333-29.866667 21.333334l-66.133333 185.6V234.666667c0-6.4 4.266667-10.666667 10.666667-10.666667z m573.866666 576H172.8l104.533333-298.666667h571.733334l-104.533334 298.666667z" />
+          </svg>
+        </div>
       </div>
 
       <div className="form-control relative col-span-3">
@@ -85,9 +89,11 @@ export default function DownProfile() {
             className="input input-bordered input-sm grow ps-1 pe-16"
           />
         </label>
-        <div className="dropdown dropdown-bottom dropdown-end bg-neutral-300 absolute end-0 w-1/6 h-full rounded-r-full flex justify-center items-center cursor-pointer">
+        <div
+          tabIndex={0}
+          className="dropdown dropdown-bottom dropdown-end bg-base-300 absolute end-0 w-1/6 h-full rounded-r-full flex justify-center items-center cursor-pointer"
+        >
           <svg
-            tabIndex={0}
             className="fill-current w-5 h-5"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 1024 1024"
@@ -97,15 +103,40 @@ export default function DownProfile() {
             <path d="M510.903016 413.647995c-52.14973 0-94.587262 42.439578-94.587262 94.587262 0 52.14973 42.437531 94.587262 94.587262 94.587262 52.147684 0 94.587262-42.437531 94.587262-94.587262C605.490278 456.087573 563.051723 413.647995 510.903016 413.647995z" />
             <path d="M794.665825 413.647995c-52.14973 0-94.587262 42.439578-94.587262 94.587262 0 52.14973 42.437531 94.587262 94.587262 94.587262 52.147684 0 94.587262-42.437531 94.587262-94.587262C889.253086 456.087573 846.813508 413.647995 794.665825 413.647995z" />
           </svg>
-          <div
+          <ul
             tabIndex={0}
-            className="dropdown-content card card-compact w-64 p-2 shadow bg-primary text-primary-content"
+            className="dropdown-content menu menu-compact bg-base-200 w-fit rounded-box"
           >
-            <div className="card-body">
-              <h3 className="card-title">Card title!</h3>
-              <p>you can use any element as a dropdown.</p>
-            </div>
-          </div>
+            {outputTemplate.map((output) => {
+              return (
+                <li
+                  key={output.name}
+                  onClick={() => setFilename(filename + output.value)}
+                  className="hover-bordered"
+                >
+                  <a className="px-2 py-1">{output.name}</a>
+                </li>
+              );
+            })}
+            <li key="more" className="ps-1">
+              <span className="ps-2 py-1 gap-x-1.5">
+                <a
+                  href="https://github.com/yt-dlp/yt-dlp#output-template"
+                  className="link link-info"
+                >
+                  MORE
+                </a>
+                <svg
+                  className="fill-current w-4 h-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 1024 1024"
+                  stroke="currentColor"
+                >
+                  <path d="M597.333333 273.664V384a42.666667 42.666667 0 0 1-38.698666 42.496C295.338667 451.157333 170.666667 575.829333 170.666667 810.666667a42.666667 42.666667 0 0 1-85.333334 0c0-268.586667 146.346667-426.496 426.666667-464.725334V170.666667c0-37.973333 45.952-57.045333 72.832-30.165334l341.333333 341.333334a42.666667 42.666667 0 0 1 0 60.330666l-341.333333 341.333334c-26.88 26.88-72.832 7.850667-72.832-30.165334v-170.666666H384a42.666667 42.666667 0 0 1 0-85.333334h170.666667a42.666667 42.666667 0 0 1 42.666666 42.666667v110.336L835.669333 512 597.333333 273.664z" />
+                </svg>
+              </span>
+            </li>
+          </ul>
         </div>
       </div>
 
