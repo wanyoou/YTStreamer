@@ -8,17 +8,21 @@ function MoreOptions() {
   const [thread, setThread] = useState('1');
 
   return (
-    <div className="grid grid-cols-6 gap-4">
-      <div className="form-control col-span-1">
+    <div className="form-control col-span-2">
+      <label className="label p-0">
+        <span className="label-text text-sm">Thread</span>
+        <span className="badge badge-sm">{thread}</span>
+      </label>
+      <label className="items-center flex h-3">
         <input
           type="range"
           min="1"
-          max="32"
+          max="64"
           value={thread}
           onChange={(e) => setThread(e.target.value)}
-          className="range range-xs"
+          className="range range-xs h-full"
         />
-      </div>
+      </label>
     </div>
   );
 }
@@ -51,7 +55,7 @@ export default function DownProfile() {
   }, []);
 
   return (
-    <div className="grid grid-cols-6 gap-4">
+    <div className="grid grid-cols-6 gap-x-4 gap-y-6">
       <div className="form-control relative col-span-3">
         <label className="input-group input-group-sm flex">
           <span className="label-text text-sm">Path</span>
@@ -99,9 +103,7 @@ export default function DownProfile() {
             viewBox="0 0 1024 1024"
             stroke="currentColor"
           >
-            <path d="M227.14123 413.647995c-52.14973 0-94.587262 42.439578-94.587262 94.587262 0 52.14973 42.437531 94.587262 94.587262 94.587262 52.147684 0 94.587262-42.437531 94.587262-94.587262C321.728492 456.087573 279.288914 413.647995 227.14123 413.647995z" />
-            <path d="M510.903016 413.647995c-52.14973 0-94.587262 42.439578-94.587262 94.587262 0 52.14973 42.437531 94.587262 94.587262 94.587262 52.147684 0 94.587262-42.437531 94.587262-94.587262C605.490278 456.087573 563.051723 413.647995 510.903016 413.647995z" />
-            <path d="M794.665825 413.647995c-52.14973 0-94.587262 42.439578-94.587262 94.587262 0 52.14973 42.437531 94.587262 94.587262 94.587262 52.147684 0 94.587262-42.437531 94.587262-94.587262C889.253086 456.087573 846.813508 413.647995 794.665825 413.647995z" />
+            <path d="M768 597.333333a85.333333 85.333333 0 1 1 0-170.666666 85.333333 85.333333 0 0 1 0 170.666666zM256 597.333333a85.333333 85.333333 0 1 1 0-170.666666 85.333333 85.333333 0 0 1 0 170.666666z m256 0a85.333333 85.333333 0 1 1 0-170.666666 85.333333 85.333333 0 0 1 0 170.666666z" />
           </svg>
           <ul
             tabIndex={0}
@@ -140,20 +142,21 @@ export default function DownProfile() {
         </div>
       </div>
 
-      <div className="relative justify-center items-center col-start-1 col-end-7">
-        <hr className="my-3 h-0.5 border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:opacity-100" />
-        <label className="btn btn-xs btn-outline w-1/5 absolute inset-y-0 inset-x-80 z-10 swap">
-          <input type="checkbox" />
+      {showMore ? <MoreOptions /> : null}
+
+      <div className="relative flex justify-center items-center col-span-6">
+        <hr className="my-3 h-0.5 w-full border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:opacity-100" />
+        <label className="btn btn-xs btn-outline w-1/5 absolute h-full z-10 swap">
+          <input type="checkbox" onChange={() => setShowMore(!showMore)} />
           <div className="swap-off flex items-center gap-x-2">
             <span className="label-text">More</span>
             <svg
-              className="fill-current w-5 h-5 pt-0.5"
+              className="fill-current w-5 h-5"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 1024 1024"
               stroke="currentColor"
             >
-              <path d="M932.331207 355.808682l-82.797751-78.876442c-12.026918-11.495822-30.987758-11.531638-42.379203-0.109494L463.235366 597.451184c-11.383258 11.379165-10.828626 29.934776 1.206478 41.387619l82.772168 78.902024c12.036128 11.495822 31.013341 11.522428 42.379203 0.143263l343.927073-320.662207C944.894338 385.826346 944.366312 367.287107 932.331207 355.808682z" />
-              <path d="M174.092014 270.492574l-82.601276 80.756255c-12.001335 11.733229-12.311397 30.467919-0.689708 41.813315l402.142963 378.813628c11.639085 11.388375 30.804586 11.05273 42.804898-0.654916l82.601276-80.738859c12.001335-11.742439 12.311397-30.467919 0.672312-41.839921L216.888725 269.845845C205.249641 258.45747 186.084139 258.758322 174.092014 270.492574z" />
+              <path d="M256 298.666667l256 256 256-256 85.333333 85.333333-341.333333 341.333333-341.333333-341.333333z" />
             </svg>
           </div>
           <div className="swap-on flex items-center gap-x-2">
@@ -164,7 +167,7 @@ export default function DownProfile() {
               viewBox="0 0 1024 1024"
               stroke="currentColor"
             >
-              <path d="M510.198 212.699l-480.758 480.724 116.156 111.201 369.447-369.489 359.719 384.13 118.599-118.523-483.161-488.043z" />
+              <path d="M170.666667 640l341.333333-341.333333 341.333333 341.333333-85.333333 85.333333-256-256-256 256z" />
             </svg>
           </div>
         </label>

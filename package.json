@@ -16,7 +16,7 @@
     "singleQuote": true
   },
   "dependencies": {
-    "@tauri-apps/api": "1.2.0",
+    "@tauri-apps/api": "2.0.0-alpha.2",
     "clsx": "1.2.1",
     "daisyui": "2.51.5",
     "next": "13.2.4",

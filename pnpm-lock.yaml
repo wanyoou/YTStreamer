@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@tailwindcss/typography': 0.5.9
-  '@tauri-apps/api': 1.2.0
+  '@tauri-apps/api': 2.0.0-alpha.2
   '@types/node': 18.15.11
   '@types/react': 18.0.33
   '@types/react-dom': 18.0.11
@@ -26,7 +26,7 @@ specifiers:
   use-count-up: 3.0.1
 
 dependencies:
-  '@tauri-apps/api': 1.2.0
+  '@tauri-apps/api': 2.0.0-alpha.2
   clsx: 1.2.1
   daisyui: 2.51.5_j7yt3jd32cwenjqavrrga47yr4
   next: 13.2.4_biqbaboplfbrettd7655fr4n2y
@@ -466,8 +466,8 @@ packages:
       tailwindcss: 3.3.1_postcss@8.4.21
     dev: true
 
-  /@tauri-apps/api/1.2.0:
-    resolution: {integrity: sha512-lsI54KI6HGf7VImuf/T9pnoejfgkNoXveP14pVV7XarrQ46rOejIVJLFqHI9sRReJMGdh2YuCoI3cc/yCWCsrw==}
+  /@tauri-apps/api/2.0.0-alpha.2:
+    resolution: {integrity: sha512-YLtCuW3ETqbR+Y89S5VV/JdoxcoojZ3rQdIVu3yIyw3M+JL/sCOGziNx/UXOViDoSD+ZyKYPDA0lUnliObW16Q==}
     engines: {node: '>= 14.6.0', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
     dev: false
 
@@ -758,7 +758,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001474
-      electron-to-chromium: 1.4.350
+      electron-to-chromium: 1.4.352
       node-releases: 2.0.10
       update-browserslist-db: 1.0.10_browserslist@4.21.5
 
@@ -1026,8 +1026,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /electron-to-chromium/1.4.350:
-    resolution: {integrity: sha512-XnXcWpVnOfHZ4C3NPiL+SubeoGV8zc/pg8GEubRtc1dPA/9jKS2vsOPmtClJHhWxUb2RSGC1OBLCbgNUJMtZPw==}
+  /electron-to-chromium/1.4.352:
+    resolution: {integrity: sha512-ikFUEyu5/q+wJpMOxWxTaEVk2M1qKqTGKKyfJmod1CPZxKfYnxVS41/GCBQg21ItBpZybyN8sNpRqCUGm+Zc4Q==}
 
   /emoji-regex/9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
