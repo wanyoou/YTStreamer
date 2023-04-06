@@ -18,14 +18,14 @@ type ProgressMsgEvent = {
 };
 
 export default function ProgressBar() {
-  const [thumbnail, setThumbnail] = useState('');
-  const [title, setTitle] = useState('title test');
-  const [uploader, setUploader] = useState('uploader test');
-  const [extractor, setExtractor] = useState('BILIBILI');
-  const [downloaded, setDownloaded] = useState('');
-  const [total, setTotal] = useState('');
-  const [speed, setSpeed] = useState('');
-  const [progress, setProgress] = useState('10');
+  const [thumbnail, setThumbnail] = useState<string>(ytDlp);
+  const [title, setTitle] = useState<string>('-');
+  const [uploader, setUploader] = useState<string>('-');
+  const [extractor, setExtractor] = useState<string>('-');
+  const [downloaded, setDownloaded] = useState<string>('-');
+  const [total, setTotal] = useState<string>('-');
+  const [speed, setSpeed] = useState<string>('-');
+  const [progress, setProgress] = useState<string>('-');
 
   async function updateStatus(payload: ProgressMsgEvent) {
     setTitle(payload.title);
@@ -56,11 +56,11 @@ export default function ProgressBar() {
   }, []);
 
   return (
-    <div className="bg-scroll bg-orange-50/75 rounded-md py-4 px-2 space-y-4">
+    <div className="bg-scroll bg-orange-50/75 rounded-md p-2 space-y-4">
       <div className="grid grid-cols-6 gap-x-4 py-1 rounded-md bg-orange-100/25 hover:bg-purple-800/25">
         <div className="relative col-span-1">
           <Image
-            src={thumbnail ? thumbnail : ytDlp}
+            src={thumbnail}
             alt="Video thumbnail or yt-dlp banner by default"
             fill={true}
           />
@@ -71,22 +71,14 @@ export default function ProgressBar() {
               <span className="label-text text-sm font-semibold">
                 {title.length > 20 ? title.slice(0, 20) + '......' : title}
               </span>
-              {extractor ? (
-                <span className="badge badge-sm badge-secondary">
-                  {extractor}
-                </span>
-              ) : null}
+              <span className="badge badge-sm badge-secondary">
+                {extractor}
+              </span>
             </label>
             <label className="label p-0">
               <span className="label-text text-sm">{uploader}</span>
               <span className="label-text text-sm">
-                {(downloaded
-                  ? downloaded !== total
-                    ? downloaded + ' / '
-                    : null
-                  : downloaded) +
-                  total +
-                  (speed ? '  ' + speed : speed)}
+                {downloaded + ' / ' + total + '  ' + speed}
               </span>
             </label>
           </div>
@@ -97,7 +89,7 @@ export default function ProgressBar() {
               max="100"
             />
             <span className="label-text text-xs text-white absolute z-10">
-              {progress > '0' ? progress : null}
+              {progress}
             </span>
           </div>
         </div>

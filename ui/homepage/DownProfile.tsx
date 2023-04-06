@@ -85,7 +85,7 @@ export default function DownProfile() {
   }, []);
 
   return (
-    <div className="grid grid-cols-6 gap-x-2 gap-y-4 bg-orange-50/75 rounded-md py-4 px-2">
+    <div className="grid grid-cols-6 gap-x-2 gap-y-4 bg-orange-50/75 rounded-md p-2">
       <div className="form-control relative col-span-3">
         <label className="input-group input-group-sm flex">
           <span className="label-text text-sm">Path</span>

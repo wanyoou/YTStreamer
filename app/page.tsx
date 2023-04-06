@@ -8,7 +8,7 @@ export default function Page() {
   return (
     <Fragment>
       <WindowSize />
-      <div className="flex-col space-y-8 w-full">
+      <div className="flex-col space-y-4">
         <AddressBar />
         <DownProfile />
         <ProgressBar />
