@@ -6,23 +6,53 @@ import { outputTemplate } from '@/lib/outputTemplate';
 
 function MoreOptions() {
   const [thread, setThread] = useState('1');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   return (
-    <div className="form-control col-span-2">
-      <label className="label p-0">
-        <span className="label-text text-sm">Thread</span>
-        <span className="badge badge-sm">{thread}</span>
-      </label>
-      <label className="items-center flex h-3">
-        <input
-          type="range"
-          min="1"
-          max="64"
-          value={thread}
-          onChange={(e) => setThread(e.target.value)}
-          className="range range-xs h-full"
-        />
-      </label>
+    <div className="grid grid-cols-6 gap-x-2 gap-y-4 col-span-6">
+      <div className="form-control col-span-2">
+        <label className="label p-0">
+          <span className="label-text text-sm">Thread</span>
+          <span className="badge badge-sm">{thread}</span>
+        </label>
+        <label className="items-center flex h-3">
+          <input
+            type="range"
+            min="1"
+            max="64"
+            value={thread}
+            onChange={(e) => setThread(e.target.value)}
+            className="range range-xs h-full"
+          />
+        </label>
+      </div>
+
+      <div className="form-control col-span-2">
+        <label className="input-group input-group-sm flex">
+          <span className="label-text text-sm px-2">Username</span>
+          <input
+            type="text"
+            placeholder="Enter username if needed"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="input input-bordered input-sm grow px-1"
+          />
+        </label>
+      </div>
+
+      <div className="form-control col-span-2">
+        <label className="input-group input-group-sm flex">
+          <span className="label-text text-sm px-2">Password</span>
+          <input
+            type="text"
+            placeholder="Enter password if needed"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="input input-bordered input-sm grow px-1"
+          />
+        </label>
+      </div>
     </div>
   );
 }
@@ -55,7 +85,7 @@ export default function DownProfile() {
   }, []);
 
   return (
-    <div className="grid grid-cols-6 gap-x-4 gap-y-6">
+    <div className="grid grid-cols-6 gap-x-2 gap-y-4 bg-orange-50/75 rounded-md py-4 px-2">
       <div className="form-control relative col-span-3">
         <label className="input-group input-group-sm flex">
           <span className="label-text text-sm">Path</span>
