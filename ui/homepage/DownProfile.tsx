@@ -137,7 +137,7 @@ export default function DownProfile() {
           </svg>
           <ul
             tabIndex={0}
-            className="dropdown-content menu menu-compact bg-base-200 w-fit rounded-box"
+            className="dropdown-content menu menu-compact bg-base-200 w-fit rounded-box shadow"
           >
             {outputTemplate.map((output) => {
               return (

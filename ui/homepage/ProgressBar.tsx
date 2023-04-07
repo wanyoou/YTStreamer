@@ -56,8 +56,8 @@ export default function ProgressBar() {
   }, []);
 
   return (
-    <div className="bg-scroll bg-orange-50/75 rounded-md p-2 space-y-4">
-      <div className="grid grid-cols-6 gap-x-4 py-1 rounded-md bg-orange-100/25 hover:bg-purple-800/25">
+    <div className="bg-scroll bg-base-100 rounded-md p-2 space-y-4">
+      <div className="grid grid-cols-6 gap-x-4 py-1 rounded-md bg-base-200 hover:bg-base-300">
         <div className="relative col-span-1">
           <Image
             src={thumbnail}
@@ -84,7 +84,7 @@ export default function ProgressBar() {
           </div>
           <div className="relative flex justify-center items-center">
             <progress
-              className="progress progress-success w-full bg-purple-900/75 rounded-full h-3"
+              className="progress progress-success w-full bg-base-content rounded-full h-3"
               value={progress}
               max="100"
             />

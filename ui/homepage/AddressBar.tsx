@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
+import Formats from '../Formats';
 
 function ClearBtn({
   clickHandler,
@@ -121,17 +122,31 @@ const AddressBar = () => {
           </div>
         </label>
 
-        <button className="btn btn-sm btn-success gap-x-2">
-          <svg
-            className="fill-current w-5 h-5"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1024 1024"
-            stroke="currentColor"
-          >
-            <path d="M213.333333 810.666667h597.333334a42.666667 42.666667 0 0 1 0 85.333333H213.333333a42.666667 42.666667 0 0 1 0-85.333333z m341.333334-248.533334l138.368-138.325333 60.330666 60.330667L512 725.504l-241.365333-241.365333 60.330666-60.330667L469.333333 562.133333V85.333333h85.333334v476.8z" />
-          </svg>
-          DOWNLOAD
-        </button>
+        <div className="flex items-center gap-x-2">
+          <div className="dropdown dropdown-bottom dropdown-end">
+            <label tabIndex={0} className="btn btn-sm btn-outline">
+              Click
+            </label>
+            <div
+              tabIndex={0}
+              className="dropdown-content rounded-box shadow bg-purple-800/25 w-max p-2"
+            >
+              <Formats />
+            </div>
+          </div>
+
+          <button className="btn btn-sm btn-success gap-x-2">
+            <svg
+              className="fill-current w-5 h-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 1024 1024"
+              stroke="currentColor"
+            >
+              <path d="M213.333333 810.666667h597.333334a42.666667 42.666667 0 0 1 0 85.333333H213.333333a42.666667 42.666667 0 0 1 0-85.333333z m341.333334-248.533334l138.368-138.325333 60.330666 60.330667L512 725.504l-241.365333-241.365333 60.330666-60.330667L469.333333 562.133333V85.333333h85.333334v476.8z" />
+            </svg>
+            DOWNLOAD
+          </button>
+        </div>
       </div>
 
       <div className="form-control">
