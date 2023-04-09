@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { Dispatch, MouseEventHandler, SetStateAction, useState } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
-import Formats from '../Formats';
+import FormatsBtn from '../Formats';
 
 function ClearBtn({
   clickHandler,
   subClass,
 }: {
-  clickHandler: () => void;
+  clickHandler: MouseEventHandler<HTMLSpanElement> | undefined;
   subClass: string;
 }) {
   return (
@@ -30,9 +30,13 @@ function ClearBtn({
   );
 }
 
-function SingleUrlBar() {
-  const [url, setUrl] = useState<string>('');
-
+function SingleUrlBar({
+  url,
+  setUrl,
+}: {
+  url: string;
+  setUrl: Dispatch<SetStateAction<string>>;
+}) {
   return (
     <label className="relative block">
       <span className="absolute inset-y-0 start-2.5 flex items-center pointer-events-none">
@@ -46,7 +50,7 @@ function SingleUrlBar() {
         </svg>
       </span>
       <input
-        type="text"
+        type="url"
         placeholder="Paste url here..."
         value={url}
         onChange={(e) => setUrl(e.target.value)}
@@ -60,9 +64,13 @@ function SingleUrlBar() {
   );
 }
 
-function MultiUrlsArea() {
-  const [urls, setUrls] = useState<string>('');
-
+function MultiUrlsArea({
+  urls,
+  setUrls,
+}: {
+  urls: string;
+  setUrls: Dispatch<SetStateAction<string>>;
+}) {
   return (
     <label className="relative block">
       <textarea
@@ -81,18 +89,21 @@ function MultiUrlsArea() {
 
 const AddressBar = () => {
   const [url, setUrl] = useState<string>('');
+  const [urls, setUrls] = useState<string>('');
   const [isTextArea, setTextArea] = useState<boolean>(false);
 
   async function handleDownload() {
     let { appWindow } = await import('@tauri-apps/api/window');
     await invoke('start_download', {
       window: appWindow,
-      targetUrl: url,
+      targetUrl: isTextArea ? urls : url,
     });
+
+    isTextArea ? setUrls('') : setUrl('');
   }
 
   return (
-    <div className="flex-col bg-orange-50/75 rounded-md p-2 space-y-2">
+    <div className="flex-col bg-base-200 rounded-md p-2 space-y-2">
       <div className="flex justify-between">
         <label className="btn btn-sm btn-outline swap swap-flip">
           <input type="checkbox" onChange={() => setTextArea(!isTextArea)} />
@@ -106,7 +117,7 @@ const AddressBar = () => {
               <path d="M896 160H128c-35.2 0-64 28.8-64 64v576c0 35.2 28.8 64 64 64h768c35.2 0 64-28.8 64-64V224c0-35.2-28.8-64-64-64z m0 608c0 16-12.8 32-32 32H160c-19.2 0-32-12.8-32-32V256c0-16 12.8-32 32-32h704c19.2 0 32 12.8 32 32v512z" />
               <path d="M224 288c-19.2 0-32 12.8-32 32v256c0 16 12.8 32 32 32s32-12.8 32-32V320c0-16-12.8-32-32-32z m608 480c19.2 0 32-12.8 32-32V608L704 768h128z" />
             </svg>
-            <span className="label-text">Multi-urls mode</span>
+            Multi-urls mode
           </div>
           <div className="swap-on flex items-center gap-x-2">
             <svg
@@ -118,24 +129,17 @@ const AddressBar = () => {
               <path d="M896 224H128c-35.2 0-64 28.8-64 64v448c0 35.2 28.8 64 64 64h768c35.2 0 64-28.8 64-64V288c0-35.2-28.8-64-64-64z m0 480c0 19.2-12.8 32-32 32H160c-19.2 0-32-12.8-32-32V320c0-19.2 12.8-32 32-32h704c19.2 0 32 12.8 32 32v384z" />
               <path d="M224 352c-19.2 0-32 12.8-32 32v256c0 16 12.8 32 32 32s32-12.8 32-32V384c0-16-12.8-32-32-32z" />
             </svg>
-            <span className="label-text">Single url mode</span>
+            Single url mode
           </div>
         </label>
 
         <div className="flex items-center gap-x-2">
-          <div className="dropdown dropdown-bottom dropdown-end">
-            <label tabIndex={0} className="btn btn-sm btn-outline">
-              Click
-            </label>
-            <div
-              tabIndex={0}
-              className="dropdown-content rounded-box shadow bg-purple-800/25 w-max p-2"
-            >
-              <Formats />
-            </div>
-          </div>
+          <FormatsBtn />
 
-          <button className="btn btn-sm btn-success gap-x-2">
+          <button
+            onClick={handleDownload}
+            className="btn btn-sm btn-success gap-x-2"
+          >
             <svg
               className="fill-current w-5 h-5"
               xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +154,11 @@ const AddressBar = () => {
       </div>
 
       <div className="form-control">
-        {isTextArea ? <MultiUrlsArea /> : <SingleUrlBar />}
+        {isTextArea ? (
+          <MultiUrlsArea urls={urls} setUrls={setUrls} />
+        ) : (
+          <SingleUrlBar url={url} setUrl={setUrl} />
+        )}
       </div>
     </div>
   );

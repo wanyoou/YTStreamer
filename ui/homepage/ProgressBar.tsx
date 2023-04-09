@@ -56,8 +56,8 @@ export default function ProgressBar() {
   }, []);
 
   return (
-    <div className="bg-scroll bg-base-100 rounded-md p-2 space-y-4">
-      <div className="grid grid-cols-6 gap-x-4 py-1 rounded-md bg-base-200 hover:bg-base-300">
+    <div className="bg-scroll bg-base-200 rounded-md p-2 space-y-4">
+      <div className="grid grid-cols-6 gap-x-4 py-1 rounded-md bg-neutral hover:bg-base-300">
         <div className="relative col-span-1">
           <Image
             src={thumbnail}

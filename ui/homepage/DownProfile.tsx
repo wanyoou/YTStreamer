@@ -85,7 +85,7 @@ export default function DownProfile() {
   }, []);
 
   return (
-    <div className="grid grid-cols-6 gap-x-2 gap-y-4 bg-orange-50/75 rounded-md p-2">
+    <div className="grid grid-cols-6 gap-x-2 gap-y-4 bg-base-200 rounded-md p-2">
       <div className="form-control relative col-span-3">
         <label className="input-group input-group-sm flex">
           <span className="label-text text-sm">Path</span>
@@ -150,14 +150,12 @@ export default function DownProfile() {
                 </li>
               );
             })}
-            <li key="more" className="ps-1">
-              <span className="ps-2 py-1 gap-x-1.5">
-                <a
-                  href="https://github.com/yt-dlp/yt-dlp#output-template"
-                  className="link link-info"
-                >
-                  MORE
-                </a>
+            <li key="more" className="hover-bordered">
+              <a
+                href="https://github.com/yt-dlp/yt-dlp#output-template"
+                className="link link-info ps-2 py-1 gap-x-1.5"
+              >
+                MORE
                 <svg
                   className="fill-current w-4 h-4"
                   xmlns="http://www.w3.org/2000/svg"
@@ -166,7 +164,7 @@ export default function DownProfile() {
                 >
                   <path d="M597.333333 273.664V384a42.666667 42.666667 0 0 1-38.698666 42.496C295.338667 451.157333 170.666667 575.829333 170.666667 810.666667a42.666667 42.666667 0 0 1-85.333334 0c0-268.586667 146.346667-426.496 426.666667-464.725334V170.666667c0-37.973333 45.952-57.045333 72.832-30.165334l341.333333 341.333334a42.666667 42.666667 0 0 1 0 60.330666l-341.333333 341.333334c-26.88 26.88-72.832 7.850667-72.832-30.165334v-170.666666H384a42.666667 42.666667 0 0 1 0-85.333334h170.666667a42.666667 42.666667 0 0 1 42.666666 42.666667v110.336L835.669333 512 597.333333 273.664z" />
                 </svg>
-              </span>
+              </a>
             </li>
           </ul>
         </div>
@@ -179,7 +177,7 @@ export default function DownProfile() {
         <label className="btn btn-xs btn-outline w-1/5 absolute h-full z-10 swap">
           <input type="checkbox" onChange={() => setShowMore(!showMore)} />
           <div className="swap-off flex items-center gap-x-2">
-            <span className="label-text">More</span>
+            More
             <svg
               className="fill-current w-5 h-5"
               xmlns="http://www.w3.org/2000/svg"
@@ -190,7 +188,7 @@ export default function DownProfile() {
             </svg>
           </div>
           <div className="swap-on flex items-center gap-x-2">
-            <span className="label-text">Fold</span>
+            Fold
             <svg
               className="fill-current w-5 h-5"
               xmlns="http://www.w3.org/2000/svg"

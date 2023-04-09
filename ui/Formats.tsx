@@ -1,3 +1,8 @@
+'use client';
+
+import { useState } from 'react';
+import clsx from 'clsx';
+
 type Item = {
   category: string;
   items: {
@@ -44,11 +49,11 @@ export const formats: Item[] = [
 ];
 
 export async function getValueByFormat(
+  category: string,
   format: string,
 ): Promise<string | undefined> {
-  const item = formats
-    .flatMap((category) => category.items)
-    .find((item) => item.format === format);
+  const formatItem = formats.find((cate) => cate.category === category);
+  const item = formatItem?.items.find((i) => i.format === format);
 
   return item?.value;
 }
@@ -97,31 +102,54 @@ function AVSvg({ category }: { category: string }) {
   }
 }
 
-export default function Formats() {
+export default function FormatsBtn() {
+  const [group, setGroup] = useState<string>('Video & Audio');
+  const [format, setFormat] = useState<string>('Best');
+
   return (
-    <div className="flex-col space-y-2">
-      {formats.map((cate) => {
-        return (
-          <div key={cate.category} className="space-y-2">
-            <label className="label text-sm font-semibold p-0">
-              {cate.category}
-            </label>
-            <div className="grid grid-cols-5 gap-2">
-              {cate.items.map((item) => {
-                return (
-                  <button
-                    key={item.value}
-                    className="btn rounded-md w-14 h-14 flex-col place-content-evenly"
-                  >
-                    <AVSvg category={cate.category} />
-                    {item.format}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
+    <div className="dropdown dropdown-bottom dropdown-end">
+      <label tabIndex={0} className="btn btn-sm">
+        {format}
+      </label>
+      <div
+        tabIndex={0}
+        className="dropdown-content rounded-box shadow-md bg-base-200 w-max p-2"
+      >
+        <div className="flex-col space-y-2">
+          {formats.map((cate) => {
+            return (
+              <div key={cate.category} className="space-y-2">
+                <label className="label text-sm font-semibold p-0">
+                  {cate.category}
+                </label>
+                <div className="grid grid-cols-5 gap-2">
+                  {cate.items.map((item) => {
+                    return (
+                      <button
+                        key={item.value}
+                        onClick={() => {
+                          setGroup(cate.category);
+                          setFormat(item.format);
+                        }}
+                        className={clsx(
+                          'btn rounded-md w-14 h-14 flex-col place-content-evenly',
+                          {
+                            'btn-active':
+                              group === cate.category && format === item.format,
+                          },
+                        )}
+                      >
+                        <AVSvg category={cate.category} />
+                        {item.format}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
