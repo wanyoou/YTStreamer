@@ -1,6 +1,4 @@
-import ProgressBar from '@/ui/homepage/ProgressBar';
-import AddressBar from '@/ui/homepage/AddressBar';
-import DownProfile from '@/ui/homepage/DownProfile';
+import HomePage from '@/ui/homepage/HomePage';
 import { WindowSize } from '@/ui/Window';
 import { Fragment } from 'react';
 
@@ -8,11 +6,7 @@ export default function Page() {
   return (
     <Fragment>
       <WindowSize />
-      <div className="flex-col space-y-4">
-        <AddressBar />
-        <DownProfile />
-        <ProgressBar />
-      </div>
+      <HomePage />
     </Fragment>
   );
 }

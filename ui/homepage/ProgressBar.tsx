@@ -1,8 +1,7 @@
-'use client';
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Image from 'next/image';
 import ytDlp from '../../public/yt-dlp.svg';
+import { TargetUrlsContext } from './Contexts';
 
 type ProgressMsgEvent = {
   thumbnail: string;
@@ -26,7 +25,7 @@ export default function ProgressBar() {
   const [total, setTotal] = useState<string>('-');
   const [speed, setSpeed] = useState<string>('-');
   const [progress, setProgress] = useState<string>('-');
-
+  const taskNum = useContext(TargetUrlsContext);
   async function updateStatus(payload: ProgressMsgEvent) {
     setTitle(payload.title);
     setDownloaded(payload.downloaded_bytes_str);
@@ -48,6 +47,7 @@ export default function ProgressBar() {
   }
 
   useEffect(() => {
+    console.log(taskNum);
     const unlistenHandler = enrollProgressEvent();
 
     return () => {
@@ -63,6 +63,7 @@ export default function ProgressBar() {
             src={thumbnail}
             alt="Video thumbnail or yt-dlp banner by default"
             fill={true}
+            priority
           />
         </div>
         <div className="col-span-4 space-y-1">

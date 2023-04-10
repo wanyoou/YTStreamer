@@ -1,5 +1,3 @@
-'use client';
-
 import { Dispatch, MouseEventHandler, SetStateAction, useState } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 import FormatsBtn from '../Formats';
@@ -87,7 +85,13 @@ function MultiUrlsArea({
   );
 }
 
-const AddressBar = () => {
+export default function AddressBar({
+  taskNum,
+  setTaskNum,
+}: {
+  taskNum: number;
+  setTaskNum: Dispatch<SetStateAction<number>>;
+}) {
   const [url, setUrl] = useState<string>('');
   const [urls, setUrls] = useState<string>('');
   const [isTextArea, setTextArea] = useState<boolean>(false);
@@ -100,6 +104,7 @@ const AddressBar = () => {
     });
 
     isTextArea ? setUrls('') : setUrl('');
+    setTaskNum(taskNum + 1);
   }
 
   return (
@@ -162,6 +167,4 @@ const AddressBar = () => {
       </div>
     </div>
   );
-};
-
-export default AddressBar;
+}
