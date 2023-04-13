@@ -1,21 +1,39 @@
 'use client';
 
-import { useState, useEffect, useContext } from 'react';
+import { useState, useReducer } from 'react';
+import { TargetUrlsContext } from './Contexts';
 import AddressBar from './AddressBar';
 import DownProfile from './DownProfile';
-import ProgressBar from './ProgressBar';
-import { TargetUrlsContext } from './Contexts';
+import ProgressBars from './ProgressBar';
+
+function targetUrlsReducer(
+  state: string[],
+  action: { type: string; payload: string | string[] },
+) {
+  switch (action.type) {
+    case 'add':
+      return [
+        ...state,
+        ...(typeof action.payload === 'string'
+          ? [action.payload]
+          : action.payload),
+      ];
+    case 'remove':
+      return state.filter((url) => url !== action.payload);
+    default:
+      return state;
+  }
+}
 
 export default function HomePage() {
-  const initTaskNum = useContext(TargetUrlsContext);
-  const [taskNum, setTaskNum] = useState<number>(initTaskNum);
+  const [targetUrls, targetUrlsDispatch] = useReducer(targetUrlsReducer, []);
 
   return (
     <div className="flex-col space-y-4">
-      <AddressBar taskNum={taskNum} setTaskNum={setTaskNum} />
-      <DownProfile />
-      <TargetUrlsContext.Provider value={taskNum}>
-        <ProgressBar />
+      <TargetUrlsContext.Provider value={{ targetUrls, targetUrlsDispatch }}>
+        <AddressBar />
+        <DownProfile />
+        <ProgressBars />
       </TargetUrlsContext.Provider>
     </div>
   );

@@ -1,5 +1,12 @@
-'use client';
+import { createContext, Dispatch } from 'react';
 
-import { createContext } from 'react';
-
-export const TargetUrlsContext = createContext<string[]>([]);
+export const TargetUrlsContext = createContext<{
+  targetUrls: string[];
+  targetUrlsDispatch: Dispatch<{
+    type: string;
+    payload: string;
+  }>;
+}>({
+  targetUrls: [],
+  targetUrlsDispatch: () => {},
+});

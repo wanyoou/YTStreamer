@@ -1,4 +1,11 @@
-import { Dispatch, MouseEventHandler, SetStateAction, useState } from 'react';
+import {
+  Dispatch,
+  MouseEventHandler,
+  SetStateAction,
+  useContext,
+  useState,
+} from 'react';
+import { TargetUrlsContext } from './Contexts';
 import { invoke } from '@tauri-apps/api/tauri';
 import FormatsBtn from '../Formats';
 
@@ -85,26 +92,24 @@ function MultiUrlsArea({
   );
 }
 
-export default function AddressBar({
-  taskNum,
-  setTaskNum,
-}: {
-  taskNum: number;
-  setTaskNum: Dispatch<SetStateAction<number>>;
-}) {
+export default function AddressBar() {
   const [url, setUrl] = useState<string>('');
   const [urls, setUrls] = useState<string>('');
   const [isTextArea, setTextArea] = useState<boolean>(false);
+  const { targetUrls, targetUrlsDispatch } = useContext(TargetUrlsContext);
 
   async function handleDownload() {
-    let { appWindow } = await import('@tauri-apps/api/window');
-    await invoke('start_download', {
-      window: appWindow,
-      targetUrl: isTextArea ? urls : url,
-    });
+    isTextArea
+      ? targetUrlsDispatch({ type: 'add', payload: urls })
+      : targetUrlsDispatch({ type: 'add', payload: url });
+
+    // let { appWindow } = await import('@tauri-apps/api/window');
+    // await invoke('start_download', {
+    //   window: appWindow,
+    //   targetUrl: isTextArea ? urls : url,
+    // });
 
     isTextArea ? setUrls('') : setUrl('');
-    setTaskNum(taskNum + 1);
   }
 
   return (
