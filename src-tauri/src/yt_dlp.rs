@@ -1,3 +1,8 @@
+/*! Invoke `yt-dlp` program, and the Tauri event mechanism is used to
+ *  notify the front-end to update the download progress and other information.
+ */
+
+use serde::Serialize;
 use std::{
     default::Default,
     io::{BufRead, BufReader},
@@ -10,34 +15,37 @@ pub struct DownloadEvent {
     pub target_url: String,
 }
 
-#[derive(Default, Clone, serde::Serialize)]
+/* Used to init the video information of the front-end, sended only once */
+#[derive(Default, Clone, Serialize)]
+struct VideoInfoEvent {
+    title: String,              // Video title
+    uploader: String,           // Video author
+    thumbnail: String,          // Video thumbnail
+    url: String,                // Video url, used to identify the video
+    extractor: String,          // Video source
+    predicted_size_str: String, // Predicted file size at start of download
+}
+
+/* Used to update the download progress information of the front-end */
+#[derive(Clone, Serialize)]
 struct ProgressMsgEvent {
-    title: String,                // Video title
+    url: String,                  // Video url, used to identify the video
     status: String,               // Download status
-    predicted_size_str: String,   // Predicted file size at start of download
     downloaded_bytes_str: String, // Already downloaded bytes since start of download
     total_bytes_str: String,      // Actual file size downloaded
     percent_str: String,          // Download progress in percent
     speed_str: String,            // Download speed
 }
 
+/* Integrate the information of each video segment in order to
+ * calculate the progress information of the whole video.
+ */
 #[derive(Default)]
 struct ProgressMsg {
-    title: String,         // Video title
-    predicted_size: f64,   // Predicted file size, got at start of download
+    url: String,           // Video url, used to identify the video
+    predicted_size: f64,   // Predicted file size, got from video info
     downloaded_bytes: f64, // Already downloaded bytes, updated only when a fragment is finished
     total_bytes: f64,      // Final file size on disk, different from predicted size
-}
-
-impl ProgressMsg {
-    fn new() -> Self {
-        Self {
-            predicted_size: 0_f64,
-            downloaded_bytes: 0_f64,
-            total_bytes: 0_f64,
-            ..Default::default()
-        }
-    }
 }
 
 fn bytes_to_string(bytes: f64) -> String {
@@ -49,48 +57,42 @@ fn bytes_to_string(bytes: f64) -> String {
     format!("{:.2}{}", bytes / 1024_f64.powi(exp as i32), units[exp])
 }
 
-fn parse_progress_msg(progress: &mut ProgressMsg, msg: &str) -> ProgressMsgEvent {
-    if msg.starts_with("[title]") {
-        progress.title = msg.strip_prefix("[title]").unwrap().to_string();
-        return ProgressMsgEvent {
-            title: progress.title.clone(),
-            ..Default::default()
-        };
-    } else if msg.starts_with("[size]") {
-        progress.predicted_size = msg.strip_prefix("[size]").unwrap().parse().unwrap();
-        return ProgressMsgEvent {
-            title: progress.title.clone(),
-            predicted_size_str: bytes_to_string(progress.predicted_size),
-            ..Default::default()
-        };
-    } else if msg.starts_with("[DONE]") {
-        return ProgressMsgEvent {
-            title: progress.title.clone(),
-            status: "DONE".to_string(),
-            predicted_size_str: bytes_to_string(progress.predicted_size),
-            downloaded_bytes_str: bytes_to_string(progress.downloaded_bytes),
-            total_bytes_str: bytes_to_string(progress.total_bytes),
-            percent_str: format!(
-                "{:.1}%",
-                progress.downloaded_bytes / progress.total_bytes * 100_f64
-            ),
-            ..Default::default()
-        };
+fn parse_video_info(progress: &mut ProgressMsg, video_info: &mut VideoInfoEvent, msg: &str) {
+    let info: Vec<&str> = msg.splitn(2, "]").collect();
+    let key = info[0].strip_prefix("[").unwrap();
+    let value = info[1].trim();
+    match key {
+        "title" => video_info.title = value.to_string(),
+        "uploader" => video_info.uploader = value.to_string(),
+        "thumbnail" => video_info.thumbnail = value.to_string(),
+        "url" => {
+            video_info.url = value.to_string();
+            progress.url = value.to_string();
+        }
+        "extractor" => video_info.extractor = value.to_string(),
+        "size" => {
+            let size: f64 = value.parse().unwrap();
+            video_info.predicted_size_str = bytes_to_string(size);
+            progress.predicted_size = size;
+        }
+        _ => {}
     }
+}
 
+fn parse_progress_msg(progress: &mut ProgressMsg, msg: &str) -> ProgressMsgEvent {
     let info: Vec<&str> = msg.split_whitespace().collect();
     let mut _downloaded_so_far = 0_f64;
 
     ProgressMsgEvent {
-        title: progress.title.clone(),
+        url: progress.url.clone(),
         status: info[0].to_string(),
-        predicted_size_str: bytes_to_string(progress.predicted_size),
         downloaded_bytes_str: {
+            let down_bytes: f64 = info[1].parse().unwrap();
             if "finished" == info[0] {
-                progress.downloaded_bytes += info[1].parse::<f64>().unwrap();
+                progress.downloaded_bytes += down_bytes;
                 _downloaded_so_far = progress.downloaded_bytes;
             } else {
-                _downloaded_so_far = progress.downloaded_bytes + info[1].parse::<f64>().unwrap();
+                _downloaded_so_far = progress.downloaded_bytes + down_bytes;
             }
             bytes_to_string(_downloaded_so_far)
         },
@@ -111,7 +113,7 @@ fn parse_progress_msg(progress: &mut ProgressMsg, msg: &str) -> ProgressMsgEvent
 }
 
 impl DownloadEvent {
-    async fn emit_event_msg(&self, event: ProgressMsgEvent) {
+    async fn emit_event_msg(&self, event: &(impl Serialize + Clone)) {
         self.window
             .emit("progress_msg", event)
             .expect("emit progress msg failed");
@@ -122,10 +124,19 @@ impl DownloadEvent {
             "--print",
             "[title]%(title)s",
             "--print",
+            "[uploader]%(uploader)s",
+            "--print",
+            "[thumbnail]%(thumbnail)s",
+            "--print",
+            "[url]%(original_url)s",
+            "--print",
+            "[extractor]%(extractor)s",
+            "--print",
             "[size]%(filesize_approx)B",
         ];
 
         let template = "
+            [progress]\
             %(progress.status)s \
             %(progress.downloaded_bytes)B \
             %(progress.total_bytes)B \
@@ -141,6 +152,7 @@ impl DownloadEvent {
 
         let mut child = Command::new("yt-dlp")
             .args(video_params)
+            .args(["--print", "[INFODONE]"])
             .args(progress_params)
             .args(params)
             .args(["--encoding", "utf8"])
@@ -153,18 +165,39 @@ impl DownloadEvent {
         let mut bufreader = BufReader::new(output);
         let mut buffer = String::new();
 
-        let mut progress = ProgressMsg::new();
+        let mut video_info: VideoInfoEvent = Default::default();
+        let mut progress: ProgressMsg = Default::default();
 
         while let Ok(size) = bufreader.read_line(&mut buffer) {
             if size > 0 {
-                self.emit_event_msg(parse_progress_msg(&mut progress, buffer.trim()))
+                let buffer = buffer.trim();
+                if buffer.starts_with("[progress]") {
+                    self.emit_event_msg(&parse_progress_msg(
+                        &mut progress,
+                        buffer.strip_prefix("[progress]").unwrap(),
+                    ))
                     .await;
-                buffer.clear();
+                } else if buffer.starts_with("[INFODONE]") {
+                    self.emit_event_msg(&video_info).await;
+                } else {
+                    parse_video_info(&mut progress, &mut video_info, buffer);
+                }
             } else {
-                self.emit_event_msg(parse_progress_msg(&mut progress, "[DONE]"))
-                    .await;
+                self.emit_event_msg(&ProgressMsgEvent {
+                    url: progress.url.clone(),
+                    status: "ALLDONE".to_string(),
+                    downloaded_bytes_str: bytes_to_string(progress.downloaded_bytes),
+                    total_bytes_str: bytes_to_string(progress.total_bytes),
+                    percent_str: format!(
+                        "{:.1}%",
+                        progress.downloaded_bytes / progress.total_bytes * 100_f64
+                    ),
+                    speed_str: "".to_string(),
+                })
+                .await;
                 break;
             }
+            buffer.clear();
         }
     }
 }

@@ -103,13 +103,13 @@ export default function AddressBar() {
       ? targetUrlsDispatch({ type: 'add', payload: urls })
       : targetUrlsDispatch({ type: 'add', payload: url });
 
-    // let { appWindow } = await import('@tauri-apps/api/window');
-    // await invoke('start_download', {
-    //   window: appWindow,
-    //   targetUrl: isTextArea ? urls : url,
-    // });
-
     isTextArea ? setUrls('') : setUrl('');
+
+    let { appWindow } = await import('@tauri-apps/api/window');
+    await invoke('start_download', {
+      window: appWindow,
+      targetUrl: isTextArea ? urls : url,
+    });
   }
 
   return (
