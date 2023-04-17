@@ -4,7 +4,6 @@ import {
   useContext,
   useImperativeHandle,
   forwardRef,
-  useRef,
   createRef,
 } from 'react';
 import { TargetUrlsContext } from './Contexts';
@@ -51,7 +50,7 @@ const ProgressBar = forwardRef<ProgressBarMethods, ProgressBarProps>(
     const [downloaded, setDownloaded] = useState<string>('-');
     const [total, setTotal] = useState<string>('-');
     const [speed, setSpeed] = useState<string>('-');
-    const [progress, setProgress] = useState<string>('-');
+    const [progress, setProgress] = useState<string>('0.0');
 
     useImperativeHandle(
       ref,
@@ -104,12 +103,12 @@ const ProgressBar = forwardRef<ProgressBarMethods, ProgressBarProps>(
           </div>
           <div className="relative flex justify-center items-center">
             <progress
-              className="progress progress-success w-full bg-base-content rounded-full h-3"
-              value={progress}
+              className="progress progress-success bg-base-content h-3"
+              value={progress > '0.0' ? progress : undefined}
               max="100"
             />
             <span className="label-text text-xs text-white absolute z-10">
-              {progress}
+              {progress}%
             </span>
           </div>
         </div>
@@ -118,26 +117,33 @@ const ProgressBar = forwardRef<ProgressBarMethods, ProgressBarProps>(
   },
 );
 
-export default function ProgressBars() {
-  const refs = useRef<Array<React.RefObject<ProgressBarMethods>>>([]);
-  const progressBarRefs: BarRefs = {};
-  const { targetUrls, targetUrlsDispatch } = useContext(TargetUrlsContext);
+const progressBarRefs: BarRefs = {};
 
-  async function enrollProgressEvent() {
-    let { appWindow } = await import('@tauri-apps/api/window');
-    const unlistenHandler = appWindow.listen<VideoInfoEvent | ProgressMsgEvent>(
-      'progress_msg',
-      (event) => {
-        const curRef = progressBarRefs[event.payload.url];
-        if (curRef) {
-          if ('status' in event.payload)
-            curRef.current?.updateStatus(event.payload);
-          else curRef.current?.updateInfo(event.payload);
-        }
-      },
-    );
-    return unlistenHandler;
+async function enrollProgressEvent() {
+  let { appWindow } = await import('@tauri-apps/api/window');
+  const unlistenHandler = appWindow.listen<VideoInfoEvent | ProgressMsgEvent>(
+    'progress_msg',
+    (event) => {
+      const curRef = progressBarRefs[event.payload.url];
+      if (curRef) {
+        if ('status' in event.payload)
+          curRef.current?.updateStatus(event.payload);
+        else curRef.current?.updateInfo(event.payload);
+      }
+    },
+  );
+  return unlistenHandler;
+}
+
+function getOrCreateRef(url: string) {
+  if (!progressBarRefs.hasOwnProperty(url)) {
+    progressBarRefs[url] = createRef<ProgressBarMethods>();
   }
+  return progressBarRefs[url];
+}
+
+export default function ProgressBars() {
+  const { targetUrls, targetUrlsDispatch } = useContext(TargetUrlsContext);
 
   useEffect(() => {
     const unlistenHandler = enrollProgressEvent();
@@ -146,17 +152,11 @@ export default function ProgressBars() {
       unlistenHandler.then((handler) => handler());
     };
   }, []);
-  // map ERROR here ! render multiple times every time a new url is added
+
   return (
     <div className="bg-scroll bg-base-200 rounded-md p-2 space-y-4">
-      {targetUrls.map((url, i) => {
-        if (refs.current.length < targetUrls.length) {
-          refs.current.push(createRef<ProgressBarMethods>());
-        }
-        if (!progressBarRefs[url]) {
-          progressBarRefs[url] = refs.current[i];
-        }
-        return <ProgressBar key={url} ref={refs.current[i]} url={url} />;
+      {targetUrls.map((url) => {
+        return <ProgressBar key={url} ref={getOrCreateRef(url)} url={url} />;
       })}
     </div>
   );

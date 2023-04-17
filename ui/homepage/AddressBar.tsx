@@ -4,9 +4,11 @@ import {
   SetStateAction,
   useContext,
   useState,
+  useEffect,
 } from 'react';
 import { TargetUrlsContext } from './Contexts';
 import { invoke } from '@tauri-apps/api/tauri';
+import { WebviewWindow } from '@tauri-apps/api/window';
 import FormatsBtn from '../Formats';
 
 function ClearBtn({
@@ -92,6 +94,13 @@ function MultiUrlsArea({
   );
 }
 
+let theWindow: WebviewWindow;
+
+async function initWindow() {
+  let { appWindow } = await import('@tauri-apps/api/window');
+  theWindow = appWindow;
+}
+
 export default function AddressBar() {
   const [url, setUrl] = useState<string>('');
   const [urls, setUrls] = useState<string>('');
@@ -105,12 +114,15 @@ export default function AddressBar() {
 
     isTextArea ? setUrls('') : setUrl('');
 
-    let { appWindow } = await import('@tauri-apps/api/window');
     await invoke('start_download', {
-      window: appWindow,
+      window: theWindow,
       targetUrl: isTextArea ? urls : url,
     });
   }
+
+  useEffect(() => {
+    initWindow();
+  }, []);
 
   return (
     <div className="flex-col bg-base-200 rounded-md p-2 space-y-2">

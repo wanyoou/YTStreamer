@@ -65,10 +65,6 @@ fn parse_video_info(progress: &mut ProgressMsg, video_info: &mut VideoInfoEvent,
         "title" => video_info.title = value.to_string(),
         "uploader" => video_info.uploader = value.to_string(),
         "thumbnail" => video_info.thumbnail = value.to_string(),
-        "url" => {
-            video_info.url = value.to_string();
-            progress.url = value.to_string();
-        }
         "extractor" => video_info.extractor = value.to_string(),
         "size" => {
             let size: f64 = value.parse().unwrap();
@@ -105,7 +101,7 @@ fn parse_progress_msg(progress: &mut ProgressMsg, msg: &str) -> ProgressMsgEvent
             bytes_to_string(bytes)
         },
         percent_str: format!(
-            "{:.1}%",
+            "{:.1}",
             _downloaded_so_far / progress.predicted_size * 100_f64
         ),
         speed_str: info[3].to_string(),
@@ -127,8 +123,6 @@ impl DownloadEvent {
             "[uploader]%(uploader)s",
             "--print",
             "[thumbnail]%(thumbnail)s",
-            "--print",
-            "[url]%(original_url)s",
             "--print",
             "[extractor]%(extractor)s",
             "--print",
@@ -156,7 +150,7 @@ impl DownloadEvent {
             .args(progress_params)
             .args(params)
             .args(["--encoding", "utf8"])
-            .arg(&self.target_url)
+            .arg(self.target_url.as_str())
             .stdout(Stdio::piped())
             .spawn()
             .expect("Failed to start yt-dlp process");
@@ -167,6 +161,9 @@ impl DownloadEvent {
 
         let mut video_info: VideoInfoEvent = Default::default();
         let mut progress: ProgressMsg = Default::default();
+
+        video_info.url = self.target_url.clone();
+        progress.url = self.target_url.clone();
 
         while let Ok(size) = bufreader.read_line(&mut buffer) {
             if size > 0 {
@@ -189,7 +186,7 @@ impl DownloadEvent {
                     downloaded_bytes_str: bytes_to_string(progress.downloaded_bytes),
                     total_bytes_str: bytes_to_string(progress.total_bytes),
                     percent_str: format!(
-                        "{:.1}%",
+                        "{:.1}",
                         progress.downloaded_bytes / progress.total_bytes * 100_f64
                     ),
                     speed_str: "".to_string(),

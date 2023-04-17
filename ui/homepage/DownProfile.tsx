@@ -3,9 +3,9 @@ import { open } from '@tauri-apps/api/dialog';
 import { outputTemplate } from '@/lib/outputTemplate';
 
 function MoreOptions() {
-  const [thread, setThread] = useState('1');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [thread, setThread] = useState<string>('1');
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   return (
     <div className="grid grid-cols-6 gap-x-2 gap-y-4 col-span-6">
@@ -55,11 +55,17 @@ function MoreOptions() {
   );
 }
 
+let defaultVideoDir: string;
+
+async function setDefaultVideoDir() {
+  let { videoDir } = await import('@tauri-apps/api/path');
+  defaultVideoDir = await videoDir();
+}
+
 export default function DownProfile() {
-  const [path, setPath] = useState('');
-  const [videoDirPath, setVideoDirPath] = useState('');
-  const [filename, setFilename] = useState('');
-  const [showMore, setShowMore] = useState(false);
+  const [path, setPath] = useState<string>('');
+  const [filename, setFilename] = useState<string>('');
+  const [showMore, setShowMore] = useState<boolean>(false);
 
   async function selectDownPath() {
     const selected = await open({
@@ -73,13 +79,8 @@ export default function DownProfile() {
     }
   }
 
-  async function setVideoDir() {
-    let { videoDir } = await import('@tauri-apps/api/path');
-    setVideoDirPath(await videoDir());
-  }
-
   useEffect(() => {
-    setVideoDir();
+    setDefaultVideoDir();
   }, []);
 
   return (
@@ -89,7 +90,7 @@ export default function DownProfile() {
           <span className="label-text text-sm">Path</span>
           <input
             type="text"
-            placeholder={videoDirPath}
+            placeholder={defaultVideoDir}
             value={path}
             onChange={(e) => setPath(e.target.value)}
             className="input input-bordered input-sm grow ps-1 pe-16"
