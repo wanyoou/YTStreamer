@@ -6,28 +6,23 @@ type Item = {
 
 export const layouts: Item[] = [
   {
-    name: 'Home',
+    name: 'Download',
     slug: '',
-    description: 'Homepage',
+    description: 'Homepage for downloading videos',
   },
   {
-    name: 'Nested Layouts',
-    slug: 'layouts',
-    description: 'Create UI that is shared across routes',
-  },
-  {
-    name: 'Grouped Layouts',
-    slug: 'route-groups',
-    description: 'Organize routes without affecting URL paths',
-  },
-  {
-    name: 'Hooks',
-    slug: 'hooks',
-    description: 'Preview the hooks available for Client and Server Components',
+    name: 'Profiles',
+    slug: 'profiles',
+    description: 'Configurations for yt-dlp',
   },
   {
     name: 'Settings',
     slug: 'settings',
     description: 'YTStreamer application settings',
+  },
+  {
+    name: 'About',
+    slug: 'about',
+    description: 'Software information such as programs version',
   },
 ];
