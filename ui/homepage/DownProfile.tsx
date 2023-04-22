@@ -3,29 +3,11 @@ import { open } from '@tauri-apps/api/dialog';
 import { outputTemplate } from '@/lib/outputTemplate';
 
 function MoreOptions() {
-  const [thread, setThread] = useState<string>('1');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   return (
     <div className="grid grid-cols-6 gap-x-2 gap-y-4 col-span-6">
-      <div className="form-control col-span-2">
-        <label className="label p-0">
-          <span className="label-text text-sm">Thread</span>
-          <span className="badge badge-sm">{thread}</span>
-        </label>
-        <label className="items-center flex h-3">
-          <input
-            type="range"
-            min="1"
-            max="64"
-            value={thread}
-            onChange={(e) => setThread(e.target.value)}
-            className="range range-xs h-full"
-          />
-        </label>
-      </div>
-
       <div className="form-control col-span-2">
         <label className="input-group input-group-sm flex">
           <span className="label-text text-sm px-2">Username</span>

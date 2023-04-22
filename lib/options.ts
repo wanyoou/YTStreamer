@@ -1,15 +1,22 @@
-type OptItem = {
+export enum Appearance {
+  InputBox = 'INPUTBOX',
+  Selector = 'SELECTOR',
+  Slider = 'SLIDER',
+}
+
+type OptItems = {
   section: string;
   opts: {
     name?: string;
     opt: string;
-    hasValue?: boolean;
+    appearance?: Appearance; // no appearance means ToggleButton
+    value?: string[];
     multiple?: boolean;
     description?: string;
   }[];
 };
 
-export const options: OptItem[] = [
+export const options: OptItems[] = [
   {
     section: 'General Options',
     opts: [
@@ -25,7 +32,7 @@ export const options: OptItem[] = [
       },
       {
         opt: 'config-locations',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         multiple: true,
         description:
           'Location of the main configuration file; either the path to the config or its containing directory',
@@ -43,18 +50,18 @@ export const options: OptItem[] = [
     opts: [
       {
         opt: 'proxy',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Use the specified HTTP/HTTPS/SOCKS proxy. To enable SOCKS proxy, specify a proper scheme, e.g. socks5://user:pass@127.0.0.1:1080/. Pass in an empty string ("") for direct connection',
       },
       {
         opt: 'socket-timeout',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description: 'Time to wait before giving up, in seconds',
       },
       {
         opt: 'source-address',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description: 'Client-side IP address to bind to',
       },
       { opt: 'force-ipv4', description: 'Make all connections via IPv4' },
@@ -71,7 +78,7 @@ export const options: OptItem[] = [
     opts: [
       {
         opt: 'geo-verification-proxy',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Use this proxy to verify the IP address for some geo-restricted sites. The default proxy specified by --proxy (or none, if the option is not present) is used for the actual downloading',
       },
@@ -82,13 +89,14 @@ export const options: OptItem[] = [
       },
       {
         opt: 'geo-bypass-country',
-        hasValue: true,
+        appearance: Appearance.Selector,
+        value: [],
         description:
           'Force bypass geographic restriction with explicitly provided two-letter ISO 3166-2 country code',
       },
       {
         opt: 'geo-bypass-ip-block',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Force bypass geographic restriction with explicitly provided IP block in CIDR notation',
       },
@@ -99,13 +107,13 @@ export const options: OptItem[] = [
     opts: [
       {
         opt: 'min-filesize',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Abort download if filesize is smaller than SIZE, e.g. 50k or 44.6M',
       },
       {
         opt: 'max-filesize',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Abort download if filesize is larger than SIZE, e.g. 50k or 44.6M',
       },
@@ -121,18 +129,19 @@ export const options: OptItem[] = [
       },
       {
         opt: 'age-limit',
-        hasValue: true,
+        appearance: Appearance.Slider,
+        value: ['1', '18', '18'], // min, max, default
         description: 'Download only videos suitable for the given age',
       },
       {
         opt: 'download-archive',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Download only videos not listed in the archive file. Record the IDs of all downloaded videos in it',
       },
       {
         opt: 'max-downloads',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description: 'Abort after downloading NUMBER files',
       },
       {
@@ -142,7 +151,7 @@ export const options: OptItem[] = [
       },
       {
         opt: 'skip-playlist-after-errors',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Number of allowed failures until the rest of the playlist is skipped',
       },
@@ -154,24 +163,24 @@ export const options: OptItem[] = [
       { opt: 'netrc', description: 'Use .netrc authentication data' },
       {
         opt: 'netrc-location',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Location of .netrc authentication data; either the path or its containing directory. Defaults to ~/.netrc',
       },
       {
         opt: 'client-certificate',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Path to client certificate file in PEM format. May include the private key',
       },
       {
         opt: 'client-certificate-key',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description: 'Path to private key file for client certificate',
       },
       {
         opt: 'client-certificate-password',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Password for client certificate private key, if encrypted. If not provided, and the key is encrypted, yt-dlp will ask interactively',
       },
@@ -182,13 +191,14 @@ export const options: OptItem[] = [
     opts: [
       {
         opt: 'format',
-        hasValue: true,
+        appearance: Appearance.Selector,
+        value: [],
         description:
           'Video format code, see [FORMAT SELECTION](https://github.com/yt-dlp/yt-dlp#format-selection) for more details',
       },
       {
         opt: 'format-sort',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Sort the formats by the fields given, see [Sorting Formats](https://github.com/yt-dlp/yt-dlp#sorting-formats) for more details',
       },
@@ -219,7 +229,7 @@ export const options: OptItem[] = [
       },
       {
         opt: 'merge-output-format',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Containers that may be used when merging formats, separated by "/", e.g. "mp4/mkv". Ignored if no merge is required.',
       },
@@ -235,13 +245,13 @@ export const options: OptItem[] = [
       },
       {
         opt: 'sub-format',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Subtitle format; accepts formats preference, e.g. "srt" or "ass/srt/best"',
       },
       {
         opt: 'sub-langs',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Languages of the subtitles to download (can be regex) or "all" separated by commas, e.g. "en.*,ja". You can prefix the language code with a "-" to exclude it from the requested languages, e.g. all,-live_chat.',
       },
@@ -252,42 +262,43 @@ export const options: OptItem[] = [
     opts: [
       {
         opt: 'concurrent-fragments',
-        hasValue: true,
+        appearance: Appearance.Slider,
+        value: ['1', '64', '1'], // min, max,default
         description:
           'Number of fragments of a dash/hlsnative video that should be downloaded concurrently (default is 1)',
       },
       {
         opt: 'limit-rate',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Maximum download rate in bytes per second, e.g. 50K or 4.2M',
       },
       {
         opt: 'throttled-rate',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Minimum download rate in bytes per second below which throttling is assumed and the video data is re-extracted, e.g. 100K',
       },
       {
         opt: 'retries',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description: 'Number of retries (default is 10), or "infinite"',
       },
       {
         opt: 'file-access-retries',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Number of times to retry on file access error (default is 3), or "infinite"',
       },
       {
         opt: 'fragment-retries',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Number of retries for a fragment (default is 10), or "infinite" (DASH, hlsnative and ISM)',
       },
       {
         opt: 'retry-sleep',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         multiple: true,
         description:
           'Time to sleep between retries in seconds (optionally) prefixed by the type of retry (http (default), fragment, file_access, extractor) to apply the sleep to. EXPR can be a number, linear=START[:END[:STEP=1]] or exp=START[:END[:BASE=2]]. This option can be used multiple times to set the sleep for the different retry types, e.g. linear=1::2;fragment:exp=1:20',
@@ -303,7 +314,7 @@ export const options: OptItem[] = [
       },
       {
         opt: 'buffer-size',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Size of download buffer, e.g. 1024 or 16K (default is 1024)',
       },
@@ -313,7 +324,7 @@ export const options: OptItem[] = [
       },
       {
         opt: 'http-chunk-size',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Size of a chunk for chunk-based HTTP downloading, e.g. 10485760 or 10M (default is disabled). May be useful for bypassing bandwidth throttling imposed by a webserver (experimental)',
       },
@@ -338,21 +349,21 @@ export const options: OptItem[] = [
       },
       {
         opt: 'download-sections',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         multiple: true,
         description:
           'Download only chapters whose title matches the given regular expression. Time ranges prefixed by a "*" can also be used in place of chapters to download the specified range. Needs ffmpeg. This option can be used multiple times to download multiple sections, e.g. "*10:15-inf";"intro"',
       },
       {
         opt: 'downloader',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         multiple: true,
         description:
           'Name or path of the external downloader to use (optionally) prefixed by the protocols (http, ftp, m3u8, dash, rstp, rtmp, mms) to use it for. You can use this option multiple times to set different downloaders for different protocols. E.g. aria2c;"dash,m3u8:native" will use aria2c for http/ftp downloads, and the native downloader for dash/m3u8 downloads',
       },
       {
         opt: 'downloader-args',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         multiple: true,
         description:
           'Give these arguments to the external downloader. Specify the downloader name and the arguments separated by a colon ":". For ffmpeg, arguments can be passed to different positions using the same syntax as --postprocessor-args. You can use this option multiple times to give different arguments to different downloaders',
@@ -378,7 +389,7 @@ export const options: OptItem[] = [
       },
       {
         opt: 'add-headers',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         multiple: true,
         description:
           'Specify a custom HTTP header and its value, separated by a colon ":". You can use this option multiple times',
@@ -390,25 +401,25 @@ export const options: OptItem[] = [
       },
       {
         opt: 'sleep-requests',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Number of seconds to sleep between requests during data extraction',
       },
       {
         opt: 'sleep-interval',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Number of seconds to sleep before each download. This is the minimum time to sleep when used along with --max-sleep-interval',
       },
       {
         opt: 'max-sleep-interval',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Maximum number of seconds to sleep. Can only be used along with --sleep-interval',
       },
       {
         opt: 'sleep-subtitles',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description: 'Number of seconds to sleep before each subtitle download',
       },
     ],
@@ -418,19 +429,19 @@ export const options: OptItem[] = [
     opts: [
       {
         opt: 'paths',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'The paths where the files should be downloaded. Specify the type of file and the path separated by a colon ":". All the same TYPES as --output are supported. Additionally, you can also provide "home" (default) and "temp" paths. This option is ignored if --output is an absolute path',
       },
       {
         opt: 'output',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Output filename template; see [OUTPUT TEMPLATE](https://github.com/yt-dlp/yt-dlp#output-template) for details',
       },
       {
         opt: 'output-na-placeholder',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Placeholder for unavailable fields in "OUTPUT TEMPLATE" (default: "NA")',
       },
@@ -445,7 +456,7 @@ export const options: OptItem[] = [
       },
       {
         opt: 'trim-filenames',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Limit the filename length (excluding extension) to the specified number of characters',
       },
@@ -499,19 +510,19 @@ export const options: OptItem[] = [
       },
       {
         opt: 'cookies',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Netscape formatted file to read cookies from and dump cookie jar in',
       },
       {
         opt: 'cookies-from-browser',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'The name of the browser to load cookies from. See [--cookies-from-browser](https://github.com/yt-dlp/yt-dlp#usage-and-options:~:text=to%20file%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20(default)-,%2D%2Dcookies%2Dfrom%2Dbrowser,-BROWSER%5B%2BKEYRING%5D%5B%3APROFILE) for details',
       },
       {
         opt: 'cache-dir',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Location in the filesystem where yt-dlp can store some downloaded information (such as client ids and signatures) permanently. By default ${XDG_CACHE_HOME}/yt-dlp',
       },
@@ -561,31 +572,32 @@ export const options: OptItem[] = [
       },
       {
         opt: 'audio-format',
-        hasValue: true,
+        appearance: Appearance.Selector,
+        value: [],
         description:
           'Format to convert the audio to when --extract-audio is used.',
       },
       {
         opt: 'audio-quality',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Specify ffmpeg audio quality to use when converting the audio with --extract-audio. Insert a value between 0 (best) and 10 (worst) for VBR or a specific bitrate like 128K (default 5)',
       },
       {
         opt: 'remux-video',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Remux the video into another container if necessary. If target container does not support the video/audio codec, remuxing will fail. You can specify multiple rules; e.g. "aac>m4a/mov>mp4/mkv" will remux aac to m4a, mov to mp4 and anything else to mkv. See [--remux-video](https://github.com/yt-dlp/yt-dlp#usage-and-options:~:text=128K%20(default%205)-,%2D%2Dremux%2Dvideo,-FORMAT%20%20%20%20%20%20%20%20%20%20%20%20Remux%20the) for details',
       },
       {
         opt: 'recode-video',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Re-encode the video into another format if necessary. The syntax and supported formats are the same as --remux-video',
       },
       {
         opt: 'postprocessor-args',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Give these arguments to the postprocessors. See [--postprocessor-args](https://github.com/yt-dlp/yt-dlp#usage-and-options:~:text=as%20%2D%2Dremux%2Dvideo-,%2D%2Dpostprocessor%2Dargs,-NAME%3AARGS%20%20Give) for details',
       },
@@ -623,62 +635,65 @@ export const options: OptItem[] = [
       },
       {
         opt: 'replace-in-metadata',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         multiple: true,
         description:
           'Replace text in a metadata field using the given regex. This option can be used multiple times.',
       },
       {
         opt: 'xattrs',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           "Write metadata to the video file's xattrs (using dublin core and xdg standards)",
       },
       {
         opt: 'concat-playlist',
-        hasValue: true,
+        appearance: Appearance.Selector,
+        value: ['never', 'always', 'multi_video'],
         description:
           'Concatenate videos in a playlist. One of "never", "always", or "multi_video" (default; only when the videos form a single show). All the video files must have same codecs and number of streams to be concatable.',
       },
       {
         opt: 'fixup',
-        hasValue: true,
+        appearance: Appearance.Selector,
+        value: ['never', 'warn', 'detect_or_warn', 'force'],
         description:
           'Automatically correct known faults of the file. One of never (do nothing), warn (only emit a warning), detect_or_warn (the default; fix file if we can, warn otherwise), force (try fixing even if file already exists)',
       },
       {
         opt: 'ffmpeg-location',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Location of the ffmpeg binary; either the path to the binary or its containing directory',
       },
       {
         opt: 'exec',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Execute a command, optionally prefixed with when to execute it, separated by a ":". See [--exec](https://github.com/yt-dlp/yt-dlp#usage-and-options:~:text=its%20containing%20directory-,%2D%2Dexec,-%5BWHEN%3A%5DCMD%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Execute) for details',
       },
       {
         opt: 'convert-subs',
-        hasValue: true,
+        appearance: Appearance.Selector,
+        value: ['ass', 'lrc', 'srt', 'vtt'],
         description:
           'Convert the subtitles to another format (currently supported: ass, lrc, srt, vtt)',
       },
       {
         opt: 'convert-thumbnails',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Convert the thumbnails to another format (currently supported: jpg, png, webp). You can specify multiple rules using similar syntax as --remux-video',
       },
       {
         opt: 'split-chapters',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Split video into multiple files based on internal chapters. The "chapter:" prefix can be used with "--paths" and "--output" to set the output filename for the split files. See [OUTPUT TEMPLATE](https://github.com/yt-dlp/yt-dlp#output-template) for details',
       },
       {
         opt: 'remove-chapters',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         multiple: true,
         description:
           'Remove chapters whose title matches the given regular expression. The syntax is the same as --download-sections. This option can be used multiple times',
@@ -690,7 +705,7 @@ export const options: OptItem[] = [
       },
       {
         opt: 'use-postprocessor',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         multiple: true,
         description:
           'See [--use-postprocessor](https://github.com/yt-dlp/yt-dlp#usage-and-options:~:text=cutting/splitting%20(default)-,%2D%2Duse%2Dpostprocessor,-NAME%5B%3AARGS%5D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20The) for details',
@@ -702,19 +717,19 @@ export const options: OptItem[] = [
     opts: [
       {
         opt: 'sponsorblock-mark',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'See [SponsorBlock Options](https://github.com/yt-dlp/yt-dlp#sponsorblock-options) for details',
       },
       {
         opt: 'sponsorblock-remove',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'See [SponsorBlock Options](https://github.com/yt-dlp/yt-dlp#sponsorblock-options) for details',
       },
       {
         opt: 'sponsorblock-chapter-title',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'See [SponsorBlock Options](https://github.com/yt-dlp/yt-dlp#sponsorblock-options) for details',
       },
@@ -725,7 +740,7 @@ export const options: OptItem[] = [
       },
       {
         opt: 'sponsorblock-api',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'SponsorBlock API location, defaults to https://sponsor.ajay.app',
       },
@@ -736,7 +751,7 @@ export const options: OptItem[] = [
     opts: [
       {
         opt: 'extractor-retries',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         description:
           'Number of retries for known extractor errors (default is 3), or "infinite"',
       },
@@ -751,7 +766,7 @@ export const options: OptItem[] = [
       },
       {
         opt: 'extractor-args',
-        hasValue: true,
+        appearance: Appearance.InputBox,
         multiple: true,
         description:
           'Pass ARGS arguments to the IE_KEY extractor. See [EXTRACTOR ARGUMENTS](https://github.com/yt-dlp/yt-dlp#extractor-arguments) for details. You can use this option multiple times to give arguments for different extractors',

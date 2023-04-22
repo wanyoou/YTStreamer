@@ -125,7 +125,7 @@ export default function AddressBar() {
   }, []);
 
   return (
-    <div className="flex-col bg-base-200 rounded-md p-2 space-y-2">
+    <div className="flex flex-col bg-base-200 rounded-md p-2 space-y-2">
       <div className="flex justify-between">
         <label className="btn btn-sm btn-outline swap swap-flip">
           <input type="checkbox" onChange={() => setTextArea(!isTextArea)} />
