@@ -18,7 +18,7 @@ type OptItems = {
 
 export const options: OptItems[] = [
   {
-    section: 'General Options',
+    section: 'General',
     opts: [
       {
         opt: 'no-abort-on-error',
@@ -46,7 +46,7 @@ export const options: OptItems[] = [
     ],
   },
   {
-    section: 'Network Options',
+    section: 'Network',
     opts: [
       {
         opt: 'proxy',
@@ -158,7 +158,7 @@ export const options: OptItems[] = [
     ],
   },
   {
-    section: 'Authentication Options',
+    section: 'Authentication',
     opts: [
       { opt: 'netrc', description: 'Use .netrc authentication data' },
       {
@@ -187,7 +187,7 @@ export const options: OptItems[] = [
     ],
   },
   {
-    section: 'Video Format Options',
+    section: 'Video Format',
     opts: [
       {
         opt: 'format',
@@ -236,7 +236,7 @@ export const options: OptItems[] = [
     ],
   },
   {
-    section: 'Subtitle Options',
+    section: 'Subtitle',
     opts: [
       { opt: 'write-subs', description: 'Write subtitle file' },
       {
@@ -258,7 +258,7 @@ export const options: OptItems[] = [
     ],
   },
   {
-    section: 'Download Options',
+    section: 'Download',
     opts: [
       {
         opt: 'concurrent-fragments',
@@ -425,7 +425,7 @@ export const options: OptItems[] = [
     ],
   },
   {
-    section: 'Filesystem Options',
+    section: 'Filesystem',
     opts: [
       {
         opt: 'paths',
@@ -530,7 +530,7 @@ export const options: OptItems[] = [
     ],
   },
   {
-    section: 'Thumbnail Options',
+    section: 'Thumbnail',
     opts: [
       { opt: 'write-thumbnail', description: 'Write thumbnail image to disk' },
       {
@@ -540,7 +540,7 @@ export const options: OptItems[] = [
     ],
   },
   {
-    section: 'Internet Shortcut Options',
+    section: 'Internet Shortcut',
     opts: [
       {
         opt: 'write-link',
@@ -563,7 +563,7 @@ export const options: OptItems[] = [
     ],
   },
   {
-    section: 'Post-Processing Options',
+    section: 'Post-Processing',
     opts: [
       {
         opt: 'extract-audio',
@@ -713,7 +713,7 @@ export const options: OptItems[] = [
     ],
   },
   {
-    section: 'SponsorBlock Options',
+    section: 'SponsorBlock',
     opts: [
       {
         opt: 'sponsorblock-mark',
@@ -747,7 +747,7 @@ export const options: OptItems[] = [
     ],
   },
   {
-    section: 'Extractor Options',
+    section: 'Extractor',
     opts: [
       {
         opt: 'extractor-retries',

@@ -18,7 +18,7 @@ export default function RootLayout({
         <ThemesInit>
           <div className="grid grid-cols-[minmax(auto,240px),min(800px,100%)] gap-x-4 py-4 pr-4">
             <GlobalNav />
-            <div className="rounded-box">{children}</div>
+            {children}
           </div>
         </ThemesInit>
       </body>
