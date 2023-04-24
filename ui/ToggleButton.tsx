@@ -1,9 +1,9 @@
-export default function ToggleButton() {
+export default function ToggleButton({ labelText }: { labelText: string }) {
   return (
     <div className="form-control">
-      <label className="label rounded-md bg-neutral hover:bg-base-300">
-        Remember me
-        <input type="checkbox" className="toggle toggle-success" />
+      <label className="label rounded-md py-1 hover:bg-neutral">
+        {labelText}
+        <input type="checkbox" className="toggle toggle-success my-1" />
       </label>
     </div>
   );

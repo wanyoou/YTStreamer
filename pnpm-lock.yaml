@@ -14,7 +14,7 @@ specifiers:
   next: 13.2.4
   next-themes: 0.2.1
   postcss: ^8.4.23
-  prettier: ^2.8.7
+  prettier: ^2.8.8
   prettier-plugin-tailwindcss: ^0.2.7
   react: 18.2.0
   react-dom: 18.2.0
@@ -47,8 +47,8 @@ devDependencies:
   eslint: 8.37.0
   eslint-config-next: 13.2.4_vwh6htx42aidho2qgfca5u5rwm
   postcss: 8.4.23
-  prettier: 2.8.7
-  prettier-plugin-tailwindcss: 0.2.7_prettier@2.8.7
+  prettier: 2.8.8
+  prettier-plugin-tailwindcss: 0.2.7_prettier@2.8.8
   tailwindcss: 3.3.1_postcss@8.4.23
   typescript: 5.0.3
 
@@ -2351,7 +2351,7 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier-plugin-tailwindcss/0.2.7_prettier@2.8.7:
+  /prettier-plugin-tailwindcss/0.2.7_prettier@2.8.8:
     resolution: {integrity: sha512-jQopIOgjLpX+y8HeD56XZw7onupRTC0cw7eKKUimI7vhjkPF5/1ltW5LyqaPtSyc8HvEpvNZsvvsGFa2qpa59w==}
     engines: {node: '>=12.17.0'}
     peerDependencies:
@@ -2403,11 +2403,11 @@ packages:
       prettier-plugin-twig-melody:
         optional: true
     dependencies:
-      prettier: 2.8.7
+      prettier: 2.8.8
     dev: true
 
-  /prettier/2.8.7:
-    resolution: {integrity: sha512-yPngTo3aXUUmyuTjeTUT75txrf+aMh9FiD7q9ZE/i6r0bPb22g4FsE6Y338PQX1bmfy08i9QQCB7/rcUAVntfw==}
+  /prettier/2.8.8:
+    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true

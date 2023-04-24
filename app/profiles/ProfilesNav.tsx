@@ -8,7 +8,7 @@ export default function ProfilesNav() {
   const [isActive, setIsActive] = useState<string>(options[0].section);
 
   return (
-    <div className="flex flex-col space-y-1">
+    <div className="flex flex-col place-content-center space-y-2">
       {options.map((segment) => (
         <span
           key={segment.section}

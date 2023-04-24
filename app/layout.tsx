@@ -14,9 +14,9 @@ export default function RootLayout({
       <Head>
         <title>YTStreamer</title>
       </Head>
-      <body className="overflow-y-auto">
+      <body>
         <ThemesInit>
-          <div className="grid grid-cols-[minmax(auto,240px),min(800px,100%)] gap-x-4 py-4 pr-4">
+          <div className="grid grid-cols-[max(96px,10%),1fr] gap-x-4">
             <GlobalNav />
             {children}
           </div>

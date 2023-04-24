@@ -9,13 +9,13 @@ function SimpleInputBox({ labelText }: { labelText: string }) {
 
   return (
     <div className="form-control">
-      <label className="label rounded-md bg-neutral hover:bg-base-300">
+      <label className="label rounded-md py-1 hover:bg-neutral">
         {labelText}
         <input
           type="text"
           value={val}
           onChange={(e) => setVal(e.target.value)}
-          className="input input-bordered input-sm"
+          className="input input-bordered input-sm rounded px-1 w-1/2 max-w-sm"
         />
       </label>
     </div>
@@ -33,14 +33,14 @@ function SimpleSelector({
 
   return (
     <div className="form-control">
-      <label className="label rounded-md bg-neutral hover:bg-base-300">
+      <label className="label rounded-md py-1 hover:bg-neutral">
         {labelText}
         <select
           value={selectedOpt}
           onChange={(e) => setSelectedOpt(e.target.value)}
-          className="select select-bordered select-sm"
+          className="select select-bordered select-sm rounded-md w-max"
         >
-          <option selected>Default</option>
+          <option>Default</option>
           {opts.map((opt) => (
             <option key={opt}>{opt}</option>
           ))}
@@ -50,32 +50,29 @@ function SimpleSelector({
   );
 }
 
-/* values: ["mix", "max", "default"] */
 function SimpleSlider({
   labelText,
   values,
 }: {
   labelText: string;
-  values: string[];
+  values: string[] /* values: [(min), (max), (default)] */;
 }) {
   const [val, setVal] = useState<string>(values[2]);
 
   return (
     <div className="form-control">
-      <label className="label rounded-md bg-neutral hover:bg-base-300">
+      <label className="label rounded-md py-1 hover:bg-neutral">
         {labelText}
-        <label className="label flex flex-col">
-          <span dir="rtl" className="badge badge-sm">
-            {val}
-          </span>
+        <label className="label px-0 py-1.5 w-2/5 space-x-1">
           <input
             type="range"
             min={values[0]}
             max={values[1]}
             value={val}
             onChange={(e) => setVal(e.target.value)}
-            className="range range-xs h-3"
+            className="range range-sm"
           />
+          <span className="badge">{val}</span>
         </label>
       </label>
     </div>
@@ -84,6 +81,46 @@ function SimpleSlider({
 
 export default function Profiles() {
   return (
-    <div className="flex flex-col bg-base-200 rounded-md p-2 space-y-2"></div>
+    <div className="flex flex-col space-y-4 pr-4 h-screen overflow-y-auto">
+      {options.map((segment) => (
+        <div key={segment.section} className="flex flex-col gap-y-1">
+          {segment.section}
+          <div className="rounded-md bg-base-200">
+            {segment.opts.map((option) => {
+              const labelText = option.opt
+                .replace(/-/g, ' ')
+                .replace(/\b\w/g, (c) => c.toUpperCase());
+
+              switch (option.appearance) {
+                case Appearance.InputBox:
+                  return (
+                    <SimpleInputBox key={option.opt} labelText={labelText} />
+                  );
+                case Appearance.Selector:
+                  return (
+                    <SimpleSelector
+                      key={option.opt}
+                      labelText={labelText}
+                      opts={option.value!}
+                    />
+                  );
+                case Appearance.Slider:
+                  return (
+                    <SimpleSlider
+                      key={option.opt}
+                      labelText={labelText}
+                      values={option.value!}
+                    />
+                  );
+                default:
+                  return (
+                    <ToggleButton key={option.opt} labelText={labelText} />
+                  );
+              }
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }

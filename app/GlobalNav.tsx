@@ -11,7 +11,7 @@ export default function GlobalNav() {
   const [selectedLayoutSegments] = useSelectedLayoutSegments();
 
   return (
-    <div>
+    <div className="h-screen">
       {layouts.map((layout, index) => {
         const isActive = layout.slug === selectedLayoutSegments;
         if (isActive) {

@@ -1,5 +1,5 @@
 import Profiles from '@/ui/profiles/Profiles';
 
-export default function Page() {
+export default function ProfilesPage() {
   return <Profiles />;
 }
