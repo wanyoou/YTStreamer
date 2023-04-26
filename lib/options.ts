@@ -1,20 +1,23 @@
+export type OptInfo = {
+  name?: string;
+  opt: string;
+  appearance?: Appearance; // no appearance means ToggleButton
+  values?: string[];
+  default?: string; // default value, not used for ToggleButton which defaults to false
+  multiple?: boolean;
+  description?: string;
+};
+
+type OptItems = {
+  section: string;
+  opts: OptInfo[];
+};
+
 export enum Appearance {
   InputBox = 'INPUTBOX',
   Selector = 'SELECTOR',
   Slider = 'SLIDER',
 }
-
-type OptItems = {
-  section: string;
-  opts: {
-    name?: string;
-    opt: string;
-    appearance?: Appearance; // no appearance means ToggleButton
-    value?: string[];
-    multiple?: boolean;
-    description?: string;
-  }[];
-};
 
 export const options: OptItems[] = [
   {
@@ -90,7 +93,8 @@ export const options: OptItems[] = [
       {
         opt: 'geo-bypass-country',
         appearance: Appearance.Selector,
-        value: [],
+        values: [],
+        default: 'Default',
         description:
           'Force bypass geographic restriction with explicitly provided two-letter ISO 3166-2 country code',
       },
@@ -130,7 +134,8 @@ export const options: OptItems[] = [
       {
         opt: 'age-limit',
         appearance: Appearance.Slider,
-        value: ['1', '18', '18'], // min, max, default
+        values: ['1', '18'], // min, max
+        default: '18',
         description: 'Download only videos suitable for the given age',
       },
       {
@@ -192,7 +197,8 @@ export const options: OptItems[] = [
       {
         opt: 'format',
         appearance: Appearance.Selector,
-        value: [],
+        values: [],
+        default: 'Default',
         description:
           'Video format code, see [FORMAT SELECTION](https://github.com/yt-dlp/yt-dlp#format-selection) for more details',
       },
@@ -263,7 +269,8 @@ export const options: OptItems[] = [
       {
         opt: 'concurrent-fragments',
         appearance: Appearance.Slider,
-        value: ['1', '64', '1'], // min, max,default
+        values: ['1', '64'], // min, max
+        default: '1',
         description:
           'Number of fragments of a dash/hlsnative video that should be downloaded concurrently (default is 1)',
       },
@@ -573,7 +580,8 @@ export const options: OptItems[] = [
       {
         opt: 'audio-format',
         appearance: Appearance.Selector,
-        value: [],
+        values: [],
+        default: 'Default',
         description:
           'Format to convert the audio to when --extract-audio is used.',
       },
@@ -649,14 +657,16 @@ export const options: OptItems[] = [
       {
         opt: 'concat-playlist',
         appearance: Appearance.Selector,
-        value: ['never', 'always', 'multi_video'],
+        values: ['never', 'always', 'multi_video'],
+        default: 'Default',
         description:
           'Concatenate videos in a playlist. One of "never", "always", or "multi_video" (default; only when the videos form a single show). All the video files must have same codecs and number of streams to be concatable.',
       },
       {
         opt: 'fixup',
         appearance: Appearance.Selector,
-        value: ['never', 'warn', 'detect_or_warn', 'force'],
+        values: ['never', 'warn', 'detect_or_warn', 'force'],
+        default: 'Default',
         description:
           'Automatically correct known faults of the file. One of never (do nothing), warn (only emit a warning), detect_or_warn (the default; fix file if we can, warn otherwise), force (try fixing even if file already exists)',
       },
@@ -675,7 +685,8 @@ export const options: OptItems[] = [
       {
         opt: 'convert-subs',
         appearance: Appearance.Selector,
-        value: ['ass', 'lrc', 'srt', 'vtt'],
+        values: ['ass', 'lrc', 'srt', 'vtt'],
+        default: 'Default',
         description:
           'Convert the subtitles to another format (currently supported: ass, lrc, srt, vtt)',
       },
@@ -774,3 +785,13 @@ export const options: OptItems[] = [
     ],
   },
 ];
+
+export function getLabelText(option: OptInfo): string {
+  if (option.name) {
+    return option.name;
+  } else {
+    return option.opt
+      .replace(/-/g, ' ')
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+}
