@@ -7,6 +7,7 @@ import {
   createRef,
 } from 'react';
 import { TargetUrlsContext } from './Contexts';
+import type { UnlistenFn } from '@tauri-apps/api/event';
 import Image from 'next/image';
 import ytDlp from '../../public/yt-dlp.svg';
 
@@ -35,6 +36,7 @@ interface ProgressBarProps {
 interface ProgressBarMethods {
   updateInfo(payload: VideoInfoEvent): void;
   updateStatus(payload: ProgressMsgEvent): void;
+  getProgress(): string;
 }
 
 interface BarRefs {
@@ -68,6 +70,9 @@ const ProgressBar = forwardRef<ProgressBarMethods, ProgressBarProps>(
             setSpeed(payload.speed_str);
             setProgress(payload.percent_str);
             if (payload.status === 'ALLDONE') setTotal(payload.total_bytes_str);
+          },
+          getProgress(): string {
+            return progress;
           },
         };
       },
@@ -118,10 +123,11 @@ const ProgressBar = forwardRef<ProgressBarMethods, ProgressBarProps>(
 );
 
 const progressBarRefs: BarRefs = {};
+let unlistenHandler: Promise<UnlistenFn> | null = null;
 
 async function enrollProgressEvent() {
   let { appWindow } = await import('@tauri-apps/api/window');
-  const unlistenHandler = appWindow.listen<VideoInfoEvent | ProgressMsgEvent>(
+  unlistenHandler = appWindow.listen<VideoInfoEvent | ProgressMsgEvent>(
     'progress_msg',
     (event) => {
       const curRef = progressBarRefs[event.payload.url];
@@ -132,7 +138,6 @@ async function enrollProgressEvent() {
       }
     },
   );
-  return unlistenHandler;
 }
 
 function getOrCreateRef(url: string) {
@@ -146,18 +151,28 @@ export default function ProgressBars() {
   const { targetUrls, targetUrlsDispatch } = useContext(TargetUrlsContext);
 
   useEffect(() => {
-    const unlistenHandler = enrollProgressEvent();
+    if (!unlistenHandler) {
+      enrollProgressEvent();
+    }
 
     return () => {
-      unlistenHandler.then((handler) => handler());
+      if (
+        unlistenHandler &&
+        Object.keys(progressBarRefs).length > 0 &&
+        Object.values(progressBarRefs).every(
+          (ref) => ref.current?.getProgress() === '100.0',
+        )
+      ) {
+        unlistenHandler.then((handler) => handler());
+      }
     };
   }, []);
 
   return (
     <div className="bg-scroll bg-base-200 rounded-md p-2 space-y-4">
-      {targetUrls.map((url) => {
-        return <ProgressBar key={url} ref={getOrCreateRef(url)} url={url} />;
-      })}
+      {targetUrls.map((url) => (
+        <ProgressBar key={url} ref={getOrCreateRef(url)} url={url} />
+      ))}
     </div>
   );
 }

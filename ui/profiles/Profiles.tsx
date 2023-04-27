@@ -2,7 +2,8 @@
 
 import { useReducer, useEffect } from 'react';
 import { Appearance, options } from '@/lib/options';
-import { OptionsContext, ActionType } from './Contexts';
+import { OptionsContext } from './Contexts';
+import type { ActionType } from './Contexts';
 import ToggleButton from './ToggleButton';
 import InputBox from './InputBox';
 import Selector from './Selector';

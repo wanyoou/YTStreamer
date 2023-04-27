@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react';
-import { OptInfo, getLabelText } from '@/lib/options';
+import { getLabelText } from '@/lib/options';
+import type { OptInfo } from '@/lib/options';
 import { OptionsContext } from './Contexts';
 
 export default function InputBox({ info }: { info: OptInfo }) {

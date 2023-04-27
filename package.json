@@ -16,30 +16,30 @@
     "singleQuote": true
   },
   "dependencies": {
-    "@tauri-apps/api": "2.0.0-alpha.2",
+    "@tauri-apps/api": "2.0.0-alpha.3",
     "clsx": "1.2.1",
-    "daisyui": "2.51.5",
-    "next": "13.2.4",
+    "daisyui": "2.51.6",
+    "next": "13.3.1",
     "next-themes": "0.2.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-is": "18.2.0",
-    "styled-components": "5.3.9",
+    "react": "18.3.0-next-6eadbe0c4-20230425",
+    "react-dom": "18.3.0-next-6eadbe0c4-20230425",
+    "react-is": "18.3.0-next-6eadbe0c4-20230425",
+    "styled-components": "6.0.0-beta.15",
     "styled-jsx": "5.1.2",
     "use-count-up": "3.0.1"
   },
   "devDependencies": {
     "@tailwindcss/typography": "0.5.9",
-    "@types/node": "18.15.11",
-    "@types/react": "18.0.33",
-    "@types/react-dom": "18.0.11",
+    "@types/node": "18.16.1",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.1",
     "autoprefixer": "^10.4.14",
-    "eslint": "8.37.0",
+    "eslint": "8.39.0",
     "eslint-config-next": "13.2.4",
     "postcss": "^8.4.23",
-    "prettier": "^2.8.8",
+    "prettier": "3.0.0-alpha.11",
     "prettier-plugin-tailwindcss": "^0.2.7",
     "tailwindcss": "^3.3.2",
-    "typescript": "5.0.3"
+    "typescript": "5.1.0-beta"
   }
 }
