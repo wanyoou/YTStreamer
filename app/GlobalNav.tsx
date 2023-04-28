@@ -5,13 +5,13 @@ import { layouts } from '@/lib/layouts';
 import clsx from 'clsx';
 import Link from 'next/link';
 
-let selectedIndex: number = 0;
+let selectedIndex = 0;
 
 export default function GlobalNav() {
   const [selectedLayoutSegments] = useSelectedLayoutSegments();
 
   return (
-    <div className="h-screen">
+    <div className='h-screen'>
       {layouts.map((layout, index) => {
         const isActive = layout.slug === selectedLayoutSegments;
         if (isActive) {

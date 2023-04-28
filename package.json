@@ -1,5 +1,4 @@
 {
-  "private": true,
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
@@ -7,15 +6,11 @@
     "export": "next export",
     "tauri": "tauri",
     "lint": "next lint",
-    "format": "prettier --write \"**/*.{js,ts,tsx,md}\""
-  },
-  "prettier": {
-    "arrowParens": "always",
-    "semi": true,
-    "trailingComma": "all",
-    "singleQuote": true
+    "format": "prettier --write **/*.{js,ts,tsx,css,md,json} --config .prettierrc.js --cache"
   },
   "dependencies": {
+    "@headlessui/react": "1.7.14",
+    "@heroicons/react": "2.0.17",
     "@tauri-apps/api": "2.0.0-alpha.3",
     "clsx": "1.2.1",
     "daisyui": "2.51.6",
@@ -33,11 +28,15 @@
     "@types/node": "18.16.1",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.1",
+    "@typescript-eslint/eslint-plugin": "5.59.1",
+    "@typescript-eslint/parser": "5.59.1",
     "autoprefixer": "^10.4.14",
     "eslint": "8.39.0",
-    "eslint-config-next": "13.2.4",
+    "eslint-config-next": "13.3.1",
+    "eslint-config-prettier": "8.8.0",
+    "eslint-plugin-prettier": "4.2.1",
     "postcss": "^8.4.23",
-    "prettier": "3.0.0-alpha.11",
+    "prettier": "2.8.8",
     "prettier-plugin-tailwindcss": "^0.2.7",
     "tailwindcss": "^3.3.2",
     "typescript": "5.1.0-beta"

@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -21,15 +17,9 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@/ui/*": [
-        "ui/*"
-      ],
-      "@/lib/*": [
-        "lib/*"
-      ],
-      "@/styles/*": [
-        "styles/*"
-      ]
+      "@/ui/*": ["ui/*"],
+      "@/lib/*": ["lib/*"],
+      "@/styles/*": ["styles/*"]
     },
     "plugins": [
       {
@@ -37,13 +27,6 @@
       }
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

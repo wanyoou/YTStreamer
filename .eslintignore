@@ -1,8 +1,10 @@
 .next/
 .turbo/
-.vscode/
 
 out/
-build/
 node_modules/
 target/
+build/
+src-tauri/
+
+pnpm-lock.yaml

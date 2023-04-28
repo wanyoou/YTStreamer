@@ -1,0 +1,13 @@
+.next/
+.turbo/
+
+out/
+node_modules/
+target/
+src-tauri/
+
+pnpm-lock.yaml
+
+.github/actions/next-stats-action/.work
+.github/actions/issue-validator/index.mjs
+.github/actions/issue-labeler/lib/index.js

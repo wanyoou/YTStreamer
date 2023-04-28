@@ -18,8 +18,7 @@ export const outputTemplate: Item[] = [
   {
     name: 'fulltitle',
     value: '%(fulltitle)s',
-    description:
-      '[fulltitle] (string): Video title ignoring live timestamp and generic title',
+    description: '[fulltitle] (string): Video title ignoring live timestamp and generic title',
   },
   {
     name: 'extension',
@@ -39,8 +38,7 @@ export const outputTemplate: Item[] = [
   {
     name: 'timestamp',
     value: '%(timestamp)d',
-    description:
-      '[timestamp] (numeric): UNIX timestamp of the moment the video became available',
+    description: '[timestamp] (numeric): UNIX timestamp of the moment the video became available',
   },
   {
     name: 'duration',

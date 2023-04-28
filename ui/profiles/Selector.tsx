@@ -8,8 +8,8 @@ export default function Selector({ info }: { info: OptInfo }) {
   const optionsDispatch = useContext(OptionsContext);
 
   return (
-    <div className="form-control">
-      <label className="label rounded-md py-1 hover:bg-neutral">
+    <div className='form-control'>
+      <label className='label rounded-md py-1 hover:bg-neutral'>
         {getLabelText(info)}
         <select
           value={selectedOpt}
@@ -22,7 +22,7 @@ export default function Selector({ info }: { info: OptInfo }) {
               default: info.default!,
             })
           }
-          className="select select-bordered select-sm rounded-md w-max"
+          className='select select-bordered select-sm rounded-md w-max'
         >
           <option>{info.default!}</option>
           {info.values!.map((opt) => (

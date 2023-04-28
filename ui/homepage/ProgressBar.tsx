@@ -1,12 +1,5 @@
-import {
-  useState,
-  useEffect,
-  useContext,
-  useImperativeHandle,
-  forwardRef,
-  createRef,
-} from 'react';
-import { TargetUrlsContext } from './Contexts';
+import { useState, useEffect, useContext, useImperativeHandle, forwardRef, createRef } from 'react';
+import { TargetUrlsContext } from 'app/GlobalContexts';
 import type { UnlistenFn } from '@tauri-apps/api/event';
 import Image from 'next/image';
 import ytDlp from '../../public/yt-dlp.svg';
@@ -43,105 +36,91 @@ interface BarRefs {
   [key: string]: React.RefObject<ProgressBarMethods>;
 }
 
-const ProgressBar = forwardRef<ProgressBarMethods, ProgressBarProps>(
-  ({ url }: ProgressBarProps, ref) => {
-    const [thumbnail, setThumbnail] = useState<string>(ytDlp);
-    const [title, setTitle] = useState<string>(url);
-    const [uploader, setUploader] = useState<string>('-');
-    const [extractor, setExtractor] = useState<string>('-');
-    const [downloaded, setDownloaded] = useState<string>('-');
-    const [total, setTotal] = useState<string>('-');
-    const [speed, setSpeed] = useState<string>('-');
-    const [progress, setProgress] = useState<string>('0.0');
+const ProgressBar = forwardRef<ProgressBarMethods, ProgressBarProps>(({ url }: ProgressBarProps, ref) => {
+  const [thumbnail, setThumbnail] = useState<string>(ytDlp);
+  const [title, setTitle] = useState<string>(url);
+  const [uploader, setUploader] = useState<string>('-');
+  const [extractor, setExtractor] = useState<string>('-');
+  const [downloaded, setDownloaded] = useState<string>('-');
+  const [total, setTotal] = useState<string>('-');
+  const [speed, setSpeed] = useState<string>('-');
+  const [progress, setProgress] = useState<string>('0.0');
 
-    useImperativeHandle(
-      ref,
-      () => {
-        return {
-          updateInfo(payload: VideoInfoEvent) {
-            setThumbnail(payload.thumbnail);
-            setTitle(payload.title);
-            setUploader(payload.uploader);
-            setExtractor(payload.extractor);
-            setTotal(payload.predicted_size_str);
-          },
-          updateStatus(payload: ProgressMsgEvent) {
-            setDownloaded(payload.downloaded_bytes_str);
-            setSpeed(payload.speed_str);
-            setProgress(payload.percent_str);
-            if (payload.status === 'ALLDONE') setTotal(payload.total_bytes_str);
-          },
-          getProgress(): string {
-            return progress;
-          },
-        };
-      },
-      [],
-    );
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        updateInfo(payload: VideoInfoEvent) {
+          setThumbnail(payload.thumbnail);
+          setTitle(payload.title);
+          setUploader(payload.uploader);
+          setExtractor(payload.extractor);
+          setTotal(payload.predicted_size_str);
+        },
+        updateStatus(payload: ProgressMsgEvent) {
+          setDownloaded(payload.downloaded_bytes_str);
+          setSpeed(payload.speed_str);
+          setProgress(payload.percent_str);
+          if (payload.status === 'ALLDONE') setTotal(payload.total_bytes_str);
+        },
+        getProgress(): string {
+          return progress;
+        },
+      };
+    },
+    [progress],
+  );
 
-    return (
-      <div className="grid grid-cols-6 gap-x-4 py-1 rounded-md bg-neutral hover:bg-base-300">
-        <div className="relative col-span-1">
-          <Image
-            src={thumbnail}
-            alt="Video thumbnail or yt-dlp banner by default"
-            fill={true}
-            priority
-          />
-        </div>
-        <div className="col-span-4 space-y-1">
-          <div>
-            <label className="label p-0">
-              <span className="label-text text-sm font-semibold">
-                {title.length > 40 ? title.slice(0, 40) + '...' : title}
-              </span>
-              <span className="badge badge-sm badge-secondary">
-                {extractor}
-              </span>
-            </label>
-            <label className="label p-0">
-              <span className="label-text text-sm">{uploader}</span>
-              <span className="label-text text-sm">
-                {downloaded} / {total} {speed}
-              </span>
-            </label>
-          </div>
-          <div className="relative flex justify-center items-center">
-            <progress
-              className="progress progress-success bg-base-content h-3"
-              value={progress > '0.0' ? progress : undefined}
-              max="100"
-            />
-            <span className="label-text text-xs text-white absolute z-10">
-              {progress}%
+  return (
+    <div className='grid grid-cols-6 gap-x-4 py-1 rounded-md bg-neutral hover:bg-base-300'>
+      <div className='relative col-span-1'>
+        <Image src={thumbnail} alt='Video thumbnail or yt-dlp banner by default' fill={true} priority />
+      </div>
+      <div className='col-span-4 space-y-1'>
+        <div>
+          <label className='label p-0'>
+            <span className='label-text text-sm font-semibold'>
+              {title.length > 40 ? title.slice(0, 40) + '...' : title}
             </span>
-          </div>
+            <span className='badge badge-sm badge-secondary'>{extractor}</span>
+          </label>
+          <label className='label p-0'>
+            <span className='label-text text-sm'>{uploader}</span>
+            <span className='label-text text-sm'>
+              {downloaded} / {total} {speed}
+            </span>
+          </label>
+        </div>
+        <div className='relative flex justify-center items-center'>
+          <progress
+            className='progress progress-success bg-base-content h-3'
+            value={progress > '0.0' ? progress : undefined}
+            max='100'
+          />
+          <span className='label-text text-xs text-white absolute z-10'>{progress}%</span>
         </div>
       </div>
-    );
-  },
-);
+    </div>
+  );
+});
+ProgressBar.displayName = 'SingleProgressBar';
 
 const progressBarRefs: BarRefs = {};
 let unlistenHandler: Promise<UnlistenFn> | null = null;
 
 async function enrollProgressEvent() {
-  let { appWindow } = await import('@tauri-apps/api/window');
-  unlistenHandler = appWindow.listen<VideoInfoEvent | ProgressMsgEvent>(
-    'progress_msg',
-    (event) => {
-      const curRef = progressBarRefs[event.payload.url];
-      if (curRef) {
-        if ('status' in event.payload)
-          curRef.current?.updateStatus(event.payload);
-        else curRef.current?.updateInfo(event.payload);
-      }
-    },
-  );
+  const { appWindow } = await import('@tauri-apps/api/window');
+  unlistenHandler = appWindow.listen<VideoInfoEvent | ProgressMsgEvent>('progress_msg', (event) => {
+    const curRef = progressBarRefs[event.payload.url];
+    if (curRef) {
+      if ('status' in event.payload) curRef.current?.updateStatus(event.payload);
+      else curRef.current?.updateInfo(event.payload);
+    }
+  });
 }
 
 function getOrCreateRef(url: string) {
-  if (!progressBarRefs.hasOwnProperty(url)) {
+  if (!Object.hasOwn(progressBarRefs, url)) {
     progressBarRefs[url] = createRef<ProgressBarMethods>();
   }
   return progressBarRefs[url];
@@ -159,9 +138,7 @@ export default function ProgressBars() {
       if (
         unlistenHandler &&
         Object.keys(progressBarRefs).length > 0 &&
-        Object.values(progressBarRefs).every(
-          (ref) => ref.current?.getProgress() === '100.0',
-        )
+        Object.values(progressBarRefs).every((ref) => ref.current?.getProgress() === '100.0')
       ) {
         unlistenHandler.then((handler) => handler());
       }
@@ -169,7 +146,7 @@ export default function ProgressBars() {
   }, []);
 
   return (
-    <div className="bg-scroll bg-base-200 rounded-md p-2 space-y-4">
+    <div className='bg-scroll bg-base-200 rounded-md p-2 space-y-4'>
       {targetUrls.map((url) => (
         <ProgressBar key={url} ref={getOrCreateRef(url)} url={url} />
       ))}

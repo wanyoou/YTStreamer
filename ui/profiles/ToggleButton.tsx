@@ -8,11 +8,11 @@ export default function ToggleButton({ info }: { info: OptInfo }) {
   const optionsDispatch = useContext(OptionsContext);
 
   return (
-    <div className="form-control">
-      <label className="label rounded-md py-1 hover:bg-neutral">
+    <div className='form-control'>
+      <label className='label rounded-md py-1 hover:bg-neutral'>
         {getLabelText(info)}
         <input
-          type="checkbox"
+          type='checkbox'
           checked={val}
           onChange={() => setVal(!val)}
           onBlur={() =>
@@ -23,7 +23,7 @@ export default function ToggleButton({ info }: { info: OptInfo }) {
               default: false,
             })
           }
-          className="toggle toggle-success my-1"
+          className='toggle toggle-success my-1'
         />
       </label>
     </div>

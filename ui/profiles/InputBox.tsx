@@ -8,11 +8,11 @@ export default function InputBox({ info }: { info: OptInfo }) {
   const optionsDispatch = useContext(OptionsContext);
 
   return (
-    <div className="form-control">
-      <label className="label rounded-md py-1 hover:bg-neutral">
+    <div className='form-control'>
+      <label className='label rounded-md py-1 hover:bg-neutral'>
         {getLabelText(info)}
         <input
-          type="text"
+          type='text'
           value={val}
           onChange={(e) => setVal(e.target.value)}
           onBlur={() =>
@@ -23,7 +23,7 @@ export default function InputBox({ info }: { info: OptInfo }) {
               default: info.default ?? '',
             })
           }
-          className="input input-bordered input-sm rounded px-1 w-1/2 max-w-sm"
+          className='input input-bordered input-sm rounded px-1 w-1/2 max-w-sm'
         />
       </label>
     </div>

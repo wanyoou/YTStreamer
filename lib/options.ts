@@ -30,8 +30,7 @@ export const options: OptItems[] = [
       },
       {
         opt: 'ignore-config',
-        description:
-          "Don't load any more configuration files except those given by --config-locations",
+        description: "Don't load any more configuration files except those given by --config-locations",
       },
       {
         opt: 'config-locations',
@@ -42,8 +41,7 @@ export const options: OptItems[] = [
       },
       {
         opt: 'live-from-start',
-        description:
-          'Download livestreams from the start. Currently only supported for YouTube (Experimental)',
+        description: 'Download livestreams from the start. Currently only supported for YouTube (Experimental)',
       },
       { opt: 'mark-watched', description: 'Mark videos watched' },
     ],
@@ -71,8 +69,7 @@ export const options: OptItems[] = [
       { opt: 'force-ipv6', description: 'Make all connections via IPv6' },
       {
         opt: 'enable-file-urls',
-        description:
-          'Enable file:// URLs. This is disabled by default for security reasons.',
+        description: 'Enable file:// URLs. This is disabled by default for security reasons.',
       },
     ],
   },
@@ -87,22 +84,19 @@ export const options: OptItems[] = [
       },
       {
         opt: 'no-geo-bypass',
-        description:
-          'Do not bypass geographic restriction via faking X-Forwarded-For HTTP header',
+        description: 'Do not bypass geographic restriction via faking X-Forwarded-For HTTP header',
       },
       {
         opt: 'geo-bypass-country',
         appearance: Appearance.Selector,
         values: [],
         default: 'Default',
-        description:
-          'Force bypass geographic restriction with explicitly provided two-letter ISO 3166-2 country code',
+        description: 'Force bypass geographic restriction with explicitly provided two-letter ISO 3166-2 country code',
       },
       {
         opt: 'geo-bypass-ip-block',
         appearance: Appearance.InputBox,
-        description:
-          'Force bypass geographic restriction with explicitly provided IP block in CIDR notation',
+        description: 'Force bypass geographic restriction with explicitly provided IP block in CIDR notation',
       },
     ],
   },
@@ -112,24 +106,20 @@ export const options: OptItems[] = [
       {
         opt: 'min-filesize',
         appearance: Appearance.InputBox,
-        description:
-          'Abort download if filesize is smaller than SIZE, e.g. 50k or 44.6M',
+        description: 'Abort download if filesize is smaller than SIZE, e.g. 50k or 44.6M',
       },
       {
         opt: 'max-filesize',
         appearance: Appearance.InputBox,
-        description:
-          'Abort download if filesize is larger than SIZE, e.g. 50k or 44.6M',
+        description: 'Abort download if filesize is larger than SIZE, e.g. 50k or 44.6M',
       },
       {
         opt: 'no-playlist',
-        description:
-          'Download only the video, if the URL refers to a video and a playlist',
+        description: 'Download only the video, if the URL refers to a video and a playlist',
       },
       {
         opt: 'yes-playlist',
-        description:
-          'Download the playlist, if the URL refers to a video and a playlist',
+        description: 'Download the playlist, if the URL refers to a video and a playlist',
       },
       {
         opt: 'age-limit',
@@ -151,14 +141,12 @@ export const options: OptItems[] = [
       },
       {
         opt: 'break-on-existing',
-        description:
-          'Stop the download process when encountering a file that is in the archive',
+        description: 'Stop the download process when encountering a file that is in the archive',
       },
       {
         opt: 'skip-playlist-after-errors',
         appearance: Appearance.InputBox,
-        description:
-          'Number of allowed failures until the rest of the playlist is skipped',
+        description: 'Number of allowed failures until the rest of the playlist is skipped',
       },
     ],
   },
@@ -175,8 +163,7 @@ export const options: OptItems[] = [
       {
         opt: 'client-certificate',
         appearance: Appearance.InputBox,
-        description:
-          'Path to client certificate file in PEM format. May include the private key',
+        description: 'Path to client certificate file in PEM format. May include the private key',
       },
       {
         opt: 'client-certificate-key',
@@ -215,23 +202,19 @@ export const options: OptItems[] = [
       },
       {
         opt: 'video-multistreams',
-        description:
-          'Allow multiple video streams to be merged into a single file',
+        description: 'Allow multiple video streams to be merged into a single file',
       },
       {
         opt: 'audio-multistreams',
-        description:
-          'Allow multiple audio streams to be merged into a single file',
+        description: 'Allow multiple audio streams to be merged into a single file',
       },
       {
         opt: 'prefer-free-formats',
-        description:
-          'Prefer video formats with free containers over non-free ones of same quality.',
+        description: 'Prefer video formats with free containers over non-free ones of same quality.',
       },
       {
         opt: 'check-formats',
-        description:
-          'Make sure formats are selected only from those that are actually downloadable',
+        description: 'Make sure formats are selected only from those that are actually downloadable',
       },
       {
         opt: 'merge-output-format',
@@ -252,8 +235,7 @@ export const options: OptItems[] = [
       {
         opt: 'sub-format',
         appearance: Appearance.InputBox,
-        description:
-          'Subtitle format; accepts formats preference, e.g. "srt" or "ass/srt/best"',
+        description: 'Subtitle format; accepts formats preference, e.g. "srt" or "ass/srt/best"',
       },
       {
         opt: 'sub-langs',
@@ -277,8 +259,7 @@ export const options: OptItems[] = [
       {
         opt: 'limit-rate',
         appearance: Appearance.InputBox,
-        description:
-          'Maximum download rate in bytes per second, e.g. 50K or 4.2M',
+        description: 'Maximum download rate in bytes per second, e.g. 50K or 4.2M',
       },
       {
         opt: 'throttled-rate',
@@ -294,14 +275,12 @@ export const options: OptItems[] = [
       {
         opt: 'file-access-retries',
         appearance: Appearance.InputBox,
-        description:
-          'Number of times to retry on file access error (default is 3), or "infinite"',
+        description: 'Number of times to retry on file access error (default is 3), or "infinite"',
       },
       {
         opt: 'fragment-retries',
         appearance: Appearance.InputBox,
-        description:
-          'Number of retries for a fragment (default is 10), or "infinite" (DASH, hlsnative and ISM)',
+        description: 'Number of retries for a fragment (default is 10), or "infinite" (DASH, hlsnative and ISM)',
       },
       {
         opt: 'retry-sleep',
@@ -316,14 +295,12 @@ export const options: OptItems[] = [
       },
       {
         opt: 'keep-fragments',
-        description:
-          'Keep downloaded fragments on disk after downloading is finished',
+        description: 'Keep downloaded fragments on disk after downloading is finished',
       },
       {
         opt: 'buffer-size',
         appearance: Appearance.InputBox,
-        description:
-          'Size of download buffer, e.g. 1024 or 16K (default is 1024)',
+        description: 'Size of download buffer, e.g. 1024 or 16K (default is 1024)',
       },
       {
         opt: 'no-resize-buffer',
@@ -382,8 +359,7 @@ export const options: OptItems[] = [
     opts: [
       {
         opt: 'legacy-server-connect',
-        description:
-          'Explicitly allow HTTPS connection to servers that do not support RFC 5746 secure renegotiation',
+        description: 'Explicitly allow HTTPS connection to servers that do not support RFC 5746 secure renegotiation',
       },
       {
         opt: 'no-check-certificates',
@@ -409,8 +385,7 @@ export const options: OptItems[] = [
       {
         opt: 'sleep-requests',
         appearance: Appearance.InputBox,
-        description:
-          'Number of seconds to sleep between requests during data extraction',
+        description: 'Number of seconds to sleep between requests during data extraction',
       },
       {
         opt: 'sleep-interval',
@@ -421,8 +396,7 @@ export const options: OptItems[] = [
       {
         opt: 'max-sleep-interval',
         appearance: Appearance.InputBox,
-        description:
-          'Maximum number of seconds to sleep. Can only be used along with --sleep-interval',
+        description: 'Maximum number of seconds to sleep. Can only be used along with --sleep-interval',
       },
       {
         opt: 'sleep-subtitles',
@@ -449,13 +423,11 @@ export const options: OptItems[] = [
       {
         opt: 'output-na-placeholder',
         appearance: Appearance.InputBox,
-        description:
-          'Placeholder for unavailable fields in "OUTPUT TEMPLATE" (default: "NA")',
+        description: 'Placeholder for unavailable fields in "OUTPUT TEMPLATE" (default: "NA")',
       },
       {
         opt: 'restrict-filenames',
-        description:
-          'Restrict filenames to only ASCII characters, and avoid "&" and spaces in filenames',
+        description: 'Restrict filenames to only ASCII characters, and avoid "&" and spaces in filenames',
       },
       {
         opt: 'windows-filenames',
@@ -464,14 +436,12 @@ export const options: OptItems[] = [
       {
         opt: 'trim-filenames',
         appearance: Appearance.InputBox,
-        description:
-          'Limit the filename length (excluding extension) to the specified number of characters',
+        description: 'Limit the filename length (excluding extension) to the specified number of characters',
       },
       { opt: 'no-overwrites', description: 'Do not overwrite any files' },
       {
         opt: 'force-overwrites',
-        description:
-          'Overwrite all video and metadata files. This option includes --no-continue',
+        description: 'Overwrite all video and metadata files. This option includes --no-continue',
       },
       {
         opt: 'no-continue',
@@ -484,8 +454,7 @@ export const options: OptItems[] = [
       },
       {
         opt: 'no-mtime',
-        description:
-          'Do not use the Last-modified header to set the file modification time',
+        description: 'Do not use the Last-modified header to set the file modification time',
       },
       {
         opt: 'write-description',
@@ -493,13 +462,11 @@ export const options: OptItems[] = [
       },
       {
         opt: 'write-info-json',
-        description:
-          'Write video metadata to a .info.json file (this may contain personal information)',
+        description: 'Write video metadata to a .info.json file (this may contain personal information)',
       },
       {
         opt: 'no-write-playlist-metafiles',
-        description:
-          'Do not write playlist metadata when using --write-info-json, --write-description etc.',
+        description: 'Do not write playlist metadata when using --write-info-json, --write-description etc.',
       },
       {
         opt: 'no-clean-info-json',
@@ -512,14 +479,12 @@ export const options: OptItems[] = [
       },
       {
         opt: 'no-write-comments',
-        description:
-          'Do not retrieve video comments unless the extraction is known to be quick',
+        description: 'Do not retrieve video comments unless the extraction is known to be quick',
       },
       {
         opt: 'cookies',
         appearance: Appearance.InputBox,
-        description:
-          'Netscape formatted file to read cookies from and dump cookie jar in',
+        description: 'Netscape formatted file to read cookies from and dump cookie jar in',
       },
       {
         opt: 'cookies-from-browser',
@@ -556,8 +521,7 @@ export const options: OptItems[] = [
       },
       {
         opt: 'write-url-link',
-        description:
-          'Write a .url Windows internet shortcut. The OS caches the URL based on the file path',
+        description: 'Write a .url Windows internet shortcut. The OS caches the URL based on the file path',
       },
       {
         opt: 'write-webloc-link',
@@ -574,16 +538,14 @@ export const options: OptItems[] = [
     opts: [
       {
         opt: 'extract-audio',
-        description:
-          'Convert video files to audio-only files (requires ffmpeg and ffprobe)',
+        description: 'Convert video files to audio-only files (requires ffmpeg and ffprobe)',
       },
       {
         opt: 'audio-format',
         appearance: Appearance.Selector,
         values: [],
         default: 'Default',
-        description:
-          'Format to convert the audio to when --extract-audio is used.',
+        description: 'Format to convert the audio to when --extract-audio is used.',
       },
       {
         opt: 'audio-quality',
@@ -611,8 +573,7 @@ export const options: OptItems[] = [
       },
       {
         opt: 'keep-video',
-        description:
-          'Keep the intermediate video file on disk after post-processing',
+        description: 'Keep the intermediate video file on disk after post-processing',
       },
       {
         opt: 'no-post-overwrites',
@@ -620,8 +581,7 @@ export const options: OptItems[] = [
       },
       {
         opt: 'embed-subs',
-        description:
-          'Embed subtitles in the video (only for mp4, webm and mkv videos)',
+        description: 'Embed subtitles in the video (only for mp4, webm and mkv videos)',
       },
       {
         opt: 'embed-thumbnail',
@@ -638,21 +598,18 @@ export const options: OptItems[] = [
       },
       {
         opt: 'embed-info-json',
-        description:
-          'Embed the infojson as an attachment to mkv/mka video files',
+        description: 'Embed the infojson as an attachment to mkv/mka video files',
       },
       {
         opt: 'replace-in-metadata',
         appearance: Appearance.InputBox,
         multiple: true,
-        description:
-          'Replace text in a metadata field using the given regex. This option can be used multiple times.',
+        description: 'Replace text in a metadata field using the given regex. This option can be used multiple times.',
       },
       {
         opt: 'xattrs',
         appearance: Appearance.InputBox,
-        description:
-          "Write metadata to the video file's xattrs (using dublin core and xdg standards)",
+        description: "Write metadata to the video file's xattrs (using dublin core and xdg standards)",
       },
       {
         opt: 'concat-playlist',
@@ -673,8 +630,7 @@ export const options: OptItems[] = [
       {
         opt: 'ffmpeg-location',
         appearance: Appearance.InputBox,
-        description:
-          'Location of the ffmpeg binary; either the path to the binary or its containing directory',
+        description: 'Location of the ffmpeg binary; either the path to the binary or its containing directory',
       },
       {
         opt: 'exec',
@@ -687,8 +643,7 @@ export const options: OptItems[] = [
         appearance: Appearance.Selector,
         values: ['ass', 'lrc', 'srt', 'vtt'],
         default: 'Default',
-        description:
-          'Convert the subtitles to another format (currently supported: ass, lrc, srt, vtt)',
+        description: 'Convert the subtitles to another format (currently supported: ass, lrc, srt, vtt)',
       },
       {
         opt: 'convert-thumbnails',
@@ -729,31 +684,26 @@ export const options: OptItems[] = [
       {
         opt: 'sponsorblock-mark',
         appearance: Appearance.InputBox,
-        description:
-          'See [SponsorBlock Options](https://github.com/yt-dlp/yt-dlp#sponsorblock-options) for details',
+        description: 'See [SponsorBlock Options](https://github.com/yt-dlp/yt-dlp#sponsorblock-options) for details',
       },
       {
         opt: 'sponsorblock-remove',
         appearance: Appearance.InputBox,
-        description:
-          'See [SponsorBlock Options](https://github.com/yt-dlp/yt-dlp#sponsorblock-options) for details',
+        description: 'See [SponsorBlock Options](https://github.com/yt-dlp/yt-dlp#sponsorblock-options) for details',
       },
       {
         opt: 'sponsorblock-chapter-title',
         appearance: Appearance.InputBox,
-        description:
-          'See [SponsorBlock Options](https://github.com/yt-dlp/yt-dlp#sponsorblock-options) for details',
+        description: 'See [SponsorBlock Options](https://github.com/yt-dlp/yt-dlp#sponsorblock-options) for details',
       },
       {
         opt: 'no-sponsorblock',
-        description:
-          'Disable both --sponsorblock-mark and --sponsorblock-remove',
+        description: 'Disable both --sponsorblock-mark and --sponsorblock-remove',
       },
       {
         opt: 'sponsorblock-api',
         appearance: Appearance.InputBox,
-        description:
-          'SponsorBlock API location, defaults to https://sponsor.ajay.app',
+        description: 'SponsorBlock API location, defaults to https://sponsor.ajay.app',
       },
     ],
   },
@@ -763,8 +713,7 @@ export const options: OptItems[] = [
       {
         opt: 'extractor-retries',
         appearance: Appearance.InputBox,
-        description:
-          'Number of retries for known extractor errors (default is 3), or "infinite"',
+        description: 'Number of retries for known extractor errors (default is 3), or "infinite"',
       },
       {
         opt: 'ignore-dynamic-mpd',
@@ -772,8 +721,7 @@ export const options: OptItems[] = [
       },
       {
         opt: 'hls-split-discontinuity',
-        description:
-          'Split HLS playlists to different formats at discontinuities such as ad breaks',
+        description: 'Split HLS playlists to different formats at discontinuities such as ad breaks',
       },
       {
         opt: 'extractor-args',
@@ -790,8 +738,6 @@ export function getLabelText(option: OptInfo): string {
   if (option.name) {
     return option.name;
   } else {
-    return option.opt
-      .replace(/-/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase());
+    return option.opt.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   }
 }
