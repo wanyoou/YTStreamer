@@ -1,5 +1,5 @@
-import { Dispatch, MouseEventHandler, SetStateAction, useContext, useState, useEffect } from 'react';
-import { TargetUrlsContext } from 'app/GlobalContexts';
+import { Dispatch, MouseEventHandler, SetStateAction, useContext, useState, useEffect, useRef } from 'react';
+import { AddressBarContext, TargetUrlsContext } from 'app/GlobalContexts';
 import { invoke } from '@tauri-apps/api/tauri';
 import { WebviewWindow } from '@tauri-apps/api/window';
 import FormatsBtn from '../Formats';
@@ -41,17 +41,17 @@ function SingleUrlBar({ url, setUrl }: { url: string; setUrl: Dispatch<SetStateA
   );
 }
 
-function MultiUrlsArea({ urls, setUrls }: { urls: string; setUrls: Dispatch<SetStateAction<string>> }) {
+function MultiUrlsArea({ urls, setUrls }: { urls: string[]; setUrls: Dispatch<SetStateAction<string[]>> }) {
   return (
     <label className='relative block'>
       <textarea
         placeholder='Paste urls here...'
-        value={urls}
-        onChange={(e) => setUrls(e.target.value)}
+        value={urls.join('\n')}
+        onChange={(e) => setUrls(e.target.value.split('\n'))}
         required={true}
         className='textarea textarea-bordered rounded-lg w-full py-1 px-2 h-48 max-h-80 font-semibold subpixel-antialiased slashed-zero placeholder:italic placeholder:text-slate-400'
       />
-      {urls.length > 0 ? <ClearBtn clickHandler={() => setUrls('')} subClass='top-2' /> : null}
+      {urls.length > 0 ? <ClearBtn clickHandler={() => setUrls([])} subClass='top-2' /> : null}
     </label>
   );
 }
@@ -64,15 +64,20 @@ async function initWindow() {
 }
 
 export default function AddressBar() {
-  const [url, setUrl] = useState<string>('');
-  const [urls, setUrls] = useState<string>('');
-  const [isTextArea, setTextArea] = useState<boolean>(false);
-  const { targetUrls, targetUrlsDispatch } = useContext(TargetUrlsContext);
+  const { targetUrlsDispatch } = useContext(TargetUrlsContext);
+  const { addressBarState, addressBarDispatch } = useContext(AddressBarContext);
+  const stateRef = useRef(addressBarState);
+
+  const [url, setUrl] = useState<string>(addressBarState.url);
+  const [urls, setUrls] = useState<string[]>(addressBarState.urls);
+  const [isTextArea, setTextArea] = useState<boolean>(addressBarState.isTextArea);
 
   async function handleDownload() {
-    isTextArea ? targetUrlsDispatch({ type: 'add', payload: urls }) : targetUrlsDispatch({ type: 'add', payload: url });
+    isTextArea
+      ? targetUrlsDispatch({ type: 'targetUrlsAdd', payload: urls })
+      : targetUrlsDispatch({ type: 'targetUrlsAdd', payload: url });
 
-    isTextArea ? setUrls('') : setUrl('');
+    isTextArea ? setUrls([]) : setUrl('');
 
     await invoke('start_download', {
       window: theWindow,
@@ -81,8 +86,16 @@ export default function AddressBar() {
   }
 
   useEffect(() => {
-    initWindow();
-  }, []);
+    stateRef.current = { url, urls, isTextArea };
+  }, [url, urls, isTextArea]);
+
+  useEffect(() => {
+    if (!theWindow) initWindow();
+
+    return () => {
+      if (stateRef.current !== addressBarState) addressBarDispatch({ type: 'updateState', payload: stateRef.current });
+    };
+  }, [addressBarState, addressBarDispatch]);
 
   return (
     <div className='flex flex-col bg-base-200 rounded-md p-2 space-y-2'>

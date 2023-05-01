@@ -1,11 +1,12 @@
 import { useState, useContext } from 'react';
 import { getLabelText } from '@/lib/options';
 import type { OptInfo } from '@/lib/options';
-import { OptionsContext } from './Contexts';
+import { ProfilesContext } from 'app/GlobalContexts';
 
 export default function ToggleButton({ info }: { info: OptInfo }) {
-  const [val, setVal] = useState<boolean>(false);
-  const optionsDispatch = useContext(OptionsContext);
+  const { opt } = info;
+  const { profilesState, profilesDispatch } = useContext(ProfilesContext);
+  const [val, setVal] = useState<boolean>((profilesState[opt] as boolean) ?? false);
 
   return (
     <div className='form-control'>
@@ -16,11 +17,11 @@ export default function ToggleButton({ info }: { info: OptInfo }) {
           checked={val}
           onChange={() => setVal(!val)}
           onBlur={() =>
-            optionsDispatch({
-              type: 'update',
-              opt: info.opt,
+            profilesDispatch({
+              type: 'updateProfiles',
+              opt: opt,
               value: val,
-              default: false,
+              defaultValue: false,
             })
           }
           className='toggle toggle-success my-1'

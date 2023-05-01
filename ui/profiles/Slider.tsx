@@ -1,12 +1,13 @@
 import { useState, useContext } from 'react';
 import { getLabelText } from '@/lib/options';
 import type { OptInfo } from '@/lib/options';
-import { OptionsContext } from './Contexts';
+import { ProfilesContext } from 'app/GlobalContexts';
 
 export default function Slider({ info }: { info: OptInfo }) {
-  const [minVal, maxVal] = info.values! as [string, string];
-  const [val, setVal] = useState<string>(info.default!);
-  const optionsDispatch = useContext(OptionsContext);
+  const { opt, values, defaultValue } = info;
+  const [minVal, maxVal] = values as [string, string];
+  const { profilesState, profilesDispatch } = useContext(ProfilesContext);
+  const [val, setVal] = useState<string>((profilesState[opt] ?? defaultValue) as string);
 
   return (
     <div className='form-control'>
@@ -20,11 +21,11 @@ export default function Slider({ info }: { info: OptInfo }) {
             value={val}
             onChange={(e) => setVal(e.target.value)}
             onBlur={() =>
-              optionsDispatch({
-                type: 'update',
-                opt: info.opt,
+              profilesDispatch({
+                type: 'updateProfiles',
+                opt: opt,
                 value: val,
-                default: info.default!,
+                defaultValue: defaultValue as string,
               })
             }
             className='range range-sm'

@@ -1,11 +1,13 @@
 import { useState, useContext } from 'react';
 import { getLabelText } from '@/lib/options';
 import type { OptInfo } from '@/lib/options';
-import { OptionsContext } from './Contexts';
+import { ProfilesContext } from 'app/GlobalContexts';
 
 export default function InputBox({ info }: { info: OptInfo }) {
-  const [val, setVal] = useState<string>('');
-  const optionsDispatch = useContext(OptionsContext);
+  const { opt, defaultValue } = info;
+  const defaultVal = defaultValue ?? '';
+  const { profilesState, profilesDispatch } = useContext(ProfilesContext);
+  const [val, setVal] = useState<string>((profilesState[opt] as string) ?? defaultVal);
 
   return (
     <div className='form-control'>
@@ -16,11 +18,11 @@ export default function InputBox({ info }: { info: OptInfo }) {
           value={val}
           onChange={(e) => setVal(e.target.value)}
           onBlur={() =>
-            optionsDispatch({
-              type: 'update',
-              opt: info.opt,
+            profilesDispatch({
+              type: 'updateProfiles',
+              opt: opt,
               value: val,
-              default: info.default ?? '',
+              defaultValue: defaultVal,
             })
           }
           className='input input-bordered input-sm rounded px-1 w-1/2 max-w-sm'

@@ -1,11 +1,12 @@
 import { useState, useContext } from 'react';
 import { getLabelText } from '@/lib/options';
 import type { OptInfo } from '@/lib/options';
-import { OptionsContext } from './Contexts';
+import { ProfilesContext } from 'app/GlobalContexts';
 
 export default function Selector({ info }: { info: OptInfo }) {
-  const [selectedOpt, setSelectedOpt] = useState<string>(info.default!);
-  const optionsDispatch = useContext(OptionsContext);
+  const { opt, values, defaultValue } = info;
+  const { profilesState, profilesDispatch } = useContext(ProfilesContext);
+  const [selectedOpt, setSelectedOpt] = useState<string>((profilesState[opt] ?? defaultValue) as string);
 
   return (
     <div className='form-control'>
@@ -15,17 +16,17 @@ export default function Selector({ info }: { info: OptInfo }) {
           value={selectedOpt}
           onChange={(e) => setSelectedOpt(e.target.value)}
           onBlur={() =>
-            optionsDispatch({
-              type: 'update',
-              opt: info.opt,
+            profilesDispatch({
+              type: 'updateProfiles',
+              opt: opt,
               value: selectedOpt,
-              default: info.default!,
+              defaultValue: defaultValue as string,
             })
           }
           className='select select-bordered select-sm rounded-md w-max'
         >
-          <option>{info.default!}</option>
-          {info.values!.map((opt) => (
+          <option>{defaultValue}</option>
+          {(values as string[]).map((opt) => (
             <option key={opt}>{opt}</option>
           ))}
         </select>

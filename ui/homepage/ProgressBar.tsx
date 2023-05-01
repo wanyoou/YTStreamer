@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useImperativeHandle, forwardRef, createRef } from 'react';
+import React, { useState, useEffect, useContext, useImperativeHandle, forwardRef, createRef } from 'react';
 import { TargetUrlsContext } from 'app/GlobalContexts';
 import type { UnlistenFn } from '@tauri-apps/api/event';
 import Image from 'next/image';
