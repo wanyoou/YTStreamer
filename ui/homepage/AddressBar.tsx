@@ -1,5 +1,5 @@
 import { Dispatch, MouseEventHandler, SetStateAction, useContext, useState, useEffect, useRef } from 'react';
-import { AddressBarContext, TargetUrlsContext } from 'app/GlobalContexts';
+import { AddressBarContext, ProgressContext } from 'app/GlobalContexts';
 import { invoke } from '@tauri-apps/api/tauri';
 import { WebviewWindow } from '@tauri-apps/api/window';
 import FormatsBtn from '../Formats';
@@ -64,7 +64,7 @@ async function initWindow() {
 }
 
 export default function AddressBar() {
-  const { targetUrlsDispatch } = useContext(TargetUrlsContext);
+  const { targetUrlsDispatch } = useContext(ProgressContext);
   const { addressBarState, addressBarDispatch } = useContext(AddressBarContext);
   const stateRef = useRef(addressBarState);
 

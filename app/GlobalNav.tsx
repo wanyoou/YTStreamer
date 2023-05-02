@@ -1,6 +1,6 @@
 'use client';
 
-import { useSelectedLayoutSegments } from 'next/navigation';
+import { useSelectedLayoutSegment } from 'next/navigation';
 import { layouts } from '@/lib/layouts';
 import clsx from 'clsx';
 import Link from 'next/link';
@@ -8,12 +8,12 @@ import Link from 'next/link';
 let selectedIndex = 0;
 
 export default function GlobalNav() {
-  const [selectedLayoutSegments] = useSelectedLayoutSegments();
+  const segment = useSelectedLayoutSegment();
 
   return (
     <div className='h-screen'>
       {layouts.map((layout, index) => {
-        const isActive = layout.slug === selectedLayoutSegments;
+        const isActive = layout.slug === (segment ?? '');
         if (isActive) {
           selectedIndex = index;
         }

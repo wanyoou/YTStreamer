@@ -1,40 +1,155 @@
 'use client';
 
-import React, { createContext, Dispatch, useReducer } from 'react';
+import React, { createContext, Dispatch, useEffect, useReducer } from 'react';
+import type { UnlistenFn } from '@tauri-apps/api/event';
+import ytDlp from '../public/yt-dlp.svg';
 
 function defaultDispatch(): void {
   throw new Error('Dispatch function not implemented.');
 }
 
 /* HOMEPAGE */
+type VideoInfoEvent = {
+  title: string;
+  uploader: string;
+  thumbnail: string;
+  url: string;
+  extractor: string;
+  predicted_size_str: string;
+};
+
+type ProgressMsgEvent = {
+  url: string;
+  status: string;
+  downloaded_bytes_str: string;
+  total_bytes_str: string;
+  percent_str: string;
+  speed_str: string;
+};
+
+interface ProgressInfo {
+  thumbnail: string;
+  title: string;
+  uploader: string;
+  extractor: string;
+  downloaded: string;
+  total: string;
+  speed: string;
+  percent: string;
+}
+
+interface AllProgressInfo {
+  [key: string]: ProgressInfo;
+}
+
 interface TargetUrlsDispatchType {
   type: string;
   payload: string | string[];
 }
 
+const initProgressInfo: ProgressInfo = {
+  thumbnail: ytDlp,
+  title: '-',
+  uploader: '-',
+  extractor: '-',
+  downloaded: '-',
+  total: '-',
+  speed: '-',
+  percent: '0.0',
+};
+const allProgressInfo: AllProgressInfo = {};
+
+let unlistenHandler: Promise<UnlistenFn> | null = null;
+
+async function enrollProgressEvent() {
+  const { appWindow } = await import('@tauri-apps/api/window');
+  unlistenHandler = appWindow.listen<VideoInfoEvent | ProgressMsgEvent>('progress_msg', ({ payload }) => {
+    const { url } = payload;
+    if ((payload as ProgressMsgEvent).status !== undefined) {
+      const { status, downloaded_bytes_str, total_bytes_str, percent_str, speed_str } = payload as ProgressMsgEvent;
+      allProgressInfo[url] = {
+        ...allProgressInfo[url],
+        downloaded: downloaded_bytes_str,
+        total: status === 'ALLDONE' ? total_bytes_str : allProgressInfo[url].total,
+        percent: percent_str,
+        speed: speed_str,
+      };
+    } else {
+      const { title, uploader, thumbnail, extractor, predicted_size_str } = payload as VideoInfoEvent;
+      allProgressInfo[url] = {
+        ...allProgressInfo[url],
+        title,
+        uploader,
+        thumbnail,
+        extractor,
+        total: predicted_size_str,
+      };
+    }
+  });
+}
+
 function targetUrlsReducer(state: string[], action: TargetUrlsDispatchType): string[] {
+  const isSingleUrl: boolean = typeof action.payload === 'string';
   switch (action.type) {
     case 'targetUrlsAdd':
-      return [...state, ...(typeof action.payload === 'string' ? [action.payload] : action.payload)];
+      if (isSingleUrl) {
+        const url: string = action.payload as string;
+        allProgressInfo[url] = { ...initProgressInfo, title: url };
+        return [...state, url];
+      } else {
+        const urls: string[] = action.payload as string[];
+        urls.forEach((url) => {
+          allProgressInfo[url] = { ...initProgressInfo, title: url };
+        });
+        return [...state, ...urls];
+      }
     case 'targetUrlsRemove':
-      return state.filter((url) => url !== action.payload);
+      if (isSingleUrl) {
+        const url: string = action.payload as string;
+        delete allProgressInfo[url];
+        return state.filter((each) => each !== url);
+      } else {
+        const urls: string[] = action.payload as string[];
+        urls.forEach((url) => {
+          delete allProgressInfo[url];
+        });
+        return state.filter((url) => !urls.includes(url));
+      }
     default:
       return state;
   }
 }
 
-export const TargetUrlsContext = createContext<{
+export const ProgressContext = createContext<{
   targetUrls: string[];
+  allProgressInfo: AllProgressInfo;
   targetUrlsDispatch: Dispatch<TargetUrlsDispatchType>;
 }>({
   targetUrls: [],
+  allProgressInfo: {},
   targetUrlsDispatch: defaultDispatch,
 });
 
-function TargetUrlsContextProvider({ children }: { children: React.ReactNode }) {
+function ProgressContextProvider({ children }: { children: React.ReactNode }) {
   const [targetUrls, targetUrlsDispatch] = useReducer(targetUrlsReducer, []);
 
-  return <TargetUrlsContext.Provider value={{ targetUrls, targetUrlsDispatch }}>{children}</TargetUrlsContext.Provider>;
+  useEffect(() => {
+    if (!unlistenHandler) {
+      enrollProgressEvent();
+    }
+
+    return () => {
+      if (unlistenHandler) {
+        unlistenHandler.then((handler) => handler());
+      }
+    };
+  }, []);
+
+  return (
+    <ProgressContext.Provider value={{ targetUrls, allProgressInfo, targetUrlsDispatch }}>
+      {children}
+    </ProgressContext.Provider>
+  );
 }
 
 /* HOMEPAGE - AddressBar */
@@ -118,10 +233,10 @@ function ProfilesContextProvider({ children }: { children: React.ReactNode }) {
 
 export default function GlobalContextsProvider({ children }: { children: React.ReactNode }) {
   return (
-    <TargetUrlsContextProvider>
-      <AddressBarContextProvider>
-        <ProfilesContextProvider>{children}</ProfilesContextProvider>
-      </AddressBarContextProvider>
-    </TargetUrlsContextProvider>
+    <AddressBarContextProvider>
+      <ProfilesContextProvider>
+        <ProgressContextProvider>{children}</ProgressContextProvider>
+      </ProfilesContextProvider>
+    </AddressBarContextProvider>
   );
 }
