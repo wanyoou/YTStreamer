@@ -193,6 +193,51 @@ function AddressBarContextProvider({ children }: { children: React.ReactNode }) 
   );
 }
 
+/* HOMEPAGE - DownProfile */
+interface DownProfileStateType {
+  path: string;
+  filename: string;
+  username: string;
+  password: string;
+}
+
+interface DownProfileDispatchType {
+  type: string;
+  payload: DownProfileStateType;
+}
+
+function downProfileReducer(state: DownProfileStateType, action: DownProfileDispatchType): DownProfileStateType {
+  switch (action.type) {
+    case 'updateState':
+      return action.payload;
+    default:
+      return state;
+  }
+}
+
+export const DownProfileContext = createContext<{
+  downProfileState: DownProfileStateType;
+  downProfileDispatch: Dispatch<DownProfileDispatchType>;
+}>({
+  downProfileState: { path: '', filename: '', username: '', password: '' },
+  downProfileDispatch: defaultDispatch,
+});
+
+function DownProfileContextProvider({ children }: { children: React.ReactNode }) {
+  const [downProfileState, downProfileDispatch] = useReducer(downProfileReducer, {
+    path: '',
+    filename: '',
+    username: '',
+    password: '',
+  });
+
+  return (
+    <DownProfileContext.Provider value={{ downProfileState, downProfileDispatch }}>
+      {children}
+    </DownProfileContext.Provider>
+  );
+}
+
 /* PROFILES */
 interface ProfilesStateType {
   [key: string]: string | boolean;
@@ -233,10 +278,12 @@ function ProfilesContextProvider({ children }: { children: React.ReactNode }) {
 
 export default function GlobalContextsProvider({ children }: { children: React.ReactNode }) {
   return (
-    <AddressBarContextProvider>
-      <ProfilesContextProvider>
-        <ProgressContextProvider>{children}</ProgressContextProvider>
-      </ProfilesContextProvider>
-    </AddressBarContextProvider>
+    <DownProfileContextProvider>
+      <AddressBarContextProvider>
+        <ProfilesContextProvider>
+          <ProgressContextProvider>{children}</ProgressContextProvider>
+        </ProfilesContextProvider>
+      </AddressBarContextProvider>
+    </DownProfileContextProvider>
   );
 }

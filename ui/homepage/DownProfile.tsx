@@ -1,10 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
+import { DownProfileContext } from 'app/GlobalContexts';
 import { open } from '@tauri-apps/api/dialog';
 import { outputTemplate } from '@/lib/outputTemplate';
+import { stateShallowEqual } from '@/lib/utils';
 
 function MoreOptions() {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const { downProfileState, downProfileDispatch } = useContext(DownProfileContext);
+  const stateRef = useRef(downProfileState);
+  const [username, setUsername] = useState<string>(downProfileState.username);
+  const [password, setPassword] = useState<string>(downProfileState.password);
+
+  useEffect(() => {
+    stateRef.current = { ...downProfileState, username, password };
+  }, [username, password, downProfileState]);
+
+  useEffect(() => {
+    return () => {
+      if (!stateShallowEqual(stateRef.current, downProfileState)) {
+        downProfileDispatch({ type: 'updateState', payload: stateRef.current });
+      }
+    };
+  }, [downProfileState, downProfileDispatch]);
 
   return (
     <div className='grid grid-cols-6 gap-x-2 gap-y-4 col-span-6'>
@@ -37,16 +53,12 @@ function MoreOptions() {
   );
 }
 
-let defaultVideoDir: string;
-
-async function setDefaultVideoDir() {
-  const { videoDir } = await import('@tauri-apps/api/path');
-  defaultVideoDir = await videoDir();
-}
-
 export default function DownProfile() {
-  const [path, setPath] = useState<string>('');
-  const [filename, setFilename] = useState<string>('');
+  const { downProfileState, downProfileDispatch } = useContext(DownProfileContext);
+  const stateRef = useRef(downProfileState);
+  const [path, setPath] = useState<string>(downProfileState.path);
+  const [filename, setFilename] = useState<string>(downProfileState.filename);
+  const [videoDirPath, setVideoDirPath] = useState<string>('');
   const [showMore, setShowMore] = useState<boolean>(false);
 
   async function selectDownPath() {
@@ -62,8 +74,26 @@ export default function DownProfile() {
   }
 
   useEffect(() => {
-    setDefaultVideoDir();
-  }, []);
+    async function fetchDefaultVideoDir() {
+      const { videoDir } = await import('@tauri-apps/api/path');
+      setVideoDirPath(await videoDir());
+    }
+    if (!videoDirPath) {
+      fetchDefaultVideoDir();
+    }
+  }, [videoDirPath]);
+
+  useEffect(() => {
+    stateRef.current = { ...downProfileState, path, filename };
+  }, [path, filename, downProfileState]);
+
+  useEffect(() => {
+    return () => {
+      if (!stateShallowEqual(stateRef.current, downProfileState)) {
+        downProfileDispatch({ type: 'updateState', payload: stateRef.current });
+      }
+    };
+  }, [downProfileState, downProfileDispatch]);
 
   return (
     <div className='grid grid-cols-6 gap-x-2 gap-y-4 bg-base-200 rounded-md p-2'>
@@ -72,7 +102,7 @@ export default function DownProfile() {
           <span className='label-text text-sm'>Path</span>
           <input
             type='text'
-            placeholder={defaultVideoDir}
+            placeholder={videoDirPath}
             value={path}
             onChange={(e) => setPath(e.target.value)}
             className='input input-bordered input-sm grow ps-1 pe-16'

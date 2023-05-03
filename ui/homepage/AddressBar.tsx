@@ -2,6 +2,7 @@ import { Dispatch, MouseEventHandler, SetStateAction, useContext, useState, useE
 import { AddressBarContext, ProgressContext } from 'app/GlobalContexts';
 import { invoke } from '@tauri-apps/api/tauri';
 import { WebviewWindow } from '@tauri-apps/api/window';
+import { stateShallowEqual } from '@/lib/utils';
 import FormatsBtn from '../Formats';
 
 function ClearBtn({
@@ -56,13 +57,6 @@ function MultiUrlsArea({ urls, setUrls }: { urls: string[]; setUrls: Dispatch<Se
   );
 }
 
-let theWindow: WebviewWindow;
-
-async function initWindow() {
-  const { appWindow } = await import('@tauri-apps/api/window');
-  theWindow = appWindow;
-}
-
 export default function AddressBar() {
   const { targetUrlsDispatch } = useContext(ProgressContext);
   const { addressBarState, addressBarDispatch } = useContext(AddressBarContext);
@@ -72,16 +66,16 @@ export default function AddressBar() {
   const [urls, setUrls] = useState<string[]>(addressBarState.urls);
   const [isTextArea, setTextArea] = useState<boolean>(addressBarState.isTextArea);
 
-  async function handleDownload() {
-    isTextArea
-      ? targetUrlsDispatch({ type: 'targetUrlsAdd', payload: urls })
-      : targetUrlsDispatch({ type: 'targetUrlsAdd', payload: url });
+  const [theWindow, setTheWindow] = useState<WebviewWindow>();
 
+  async function handleDownload() {
+    const payload = isTextArea ? urls : url;
+    targetUrlsDispatch({ type: 'targetUrlsAdd', payload });
     isTextArea ? setUrls([]) : setUrl('');
 
     await invoke('start_download', {
       window: theWindow,
-      targetUrl: isTextArea ? urls : url,
+      targetUrl: payload,
     });
   }
 
@@ -90,12 +84,22 @@ export default function AddressBar() {
   }, [url, urls, isTextArea]);
 
   useEffect(() => {
-    if (!theWindow) initWindow();
-
     return () => {
-      if (stateRef.current !== addressBarState) addressBarDispatch({ type: 'updateState', payload: stateRef.current });
+      if (!stateShallowEqual(stateRef.current, addressBarState)) {
+        addressBarDispatch({ type: 'updateState', payload: stateRef.current });
+      }
     };
   }, [addressBarState, addressBarDispatch]);
+
+  useEffect(() => {
+    async function initWindow() {
+      const { appWindow } = await import('@tauri-apps/api/window');
+      setTheWindow(appWindow);
+    }
+    if (!theWindow) {
+      initWindow();
+    }
+  }, [theWindow]);
 
   return (
     <div className='flex flex-col bg-base-200 rounded-md p-2 space-y-2'>

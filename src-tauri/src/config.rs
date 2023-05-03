@@ -2,6 +2,7 @@ use serde_json::{Map, Value};
 use std::{
     fs::{self, OpenOptions},
     io::{BufRead, BufReader, BufWriter, Write},
+    path::Path,
 };
 
 fn write_contents(writer: &mut impl Write, mut opt: String, value: Value) {
@@ -20,6 +21,10 @@ fn write_contents(writer: &mut impl Write, mut opt: String, value: Value) {
 
 pub async fn upgrade_ytdlp_conf(conf_content: String) {
     let mut config: Map<String, Value> = serde_json::from_str(conf_content.as_str()).unwrap();
+
+    if !Path::new("data").exists() {
+        fs::create_dir_all("data").unwrap();
+    }
 
     let yt_dlp_conf = OpenOptions::new()
         .read(true)
