@@ -4,16 +4,24 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { WebviewWindow } from '@tauri-apps/api/window';
 import { stateShallowEqual } from '@/lib/utils';
 import FormatsBtn from '../Formats';
+import isURL from 'validator/lib/isURL';
+import clsx from 'clsx';
 
 function ClearBtn({
   clickHandler,
-  subClass,
+  isTextArea,
 }: {
-  clickHandler: MouseEventHandler<HTMLSpanElement> | undefined;
-  subClass: string;
+  clickHandler: MouseEventHandler<HTMLSpanElement>;
+  isTextArea: boolean;
 }) {
   return (
-    <span onClick={clickHandler} className={'absolute ' + subClass + ' end-2 flex items-center cursor-pointer'}>
+    <span
+      onClick={clickHandler}
+      className={clsx('absolute end-2 flex items-center cursor-pointer', {
+        'inset-y-3': !isTextArea,
+        'top-2': isTextArea,
+      })}
+    >
       <svg className='fill-current stroke-current w-5 h-5' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'>
         <path d='M512 56.889344c251.35104 0 455.110656 203.759616 455.110656 455.110656S763.35104 967.110656 512 967.110656 56.889344 763.35104 56.889344 512 260.64896 56.889344 512 56.889344z m180.675584 274.316288c-11.108352-11.108352-29.118464-11.108352-40.226816 0L511.65696 471.998464 370.864128 331.205632c-11.108352-11.108352-29.118464-11.108352-40.226816 0-11.108352 11.108352-11.108352 29.118464 0 40.226816L471.42912 512.22528 330.637312 653.018112c-11.108352 11.108352-11.108352 29.118464 0 40.226816 11.108352 11.108352 29.118464 11.108352 40.226816 0l140.792832-140.792832 140.791808 140.792832c11.108352 11.108352 29.118464 11.108352 40.226816 0 11.108352-11.108352 11.108352-29.118464 0-40.226816L551.882752 512.22528l140.792832-140.792832c11.108352-11.108352 11.108352-29.118464 0-40.226816z' />
       </svg>
@@ -21,24 +29,67 @@ function ClearBtn({
   );
 }
 
-function SingleUrlBar({ url, setUrl }: { url: string; setUrl: Dispatch<SetStateAction<string>> }) {
+function SingleUrlBar({
+  url,
+  setUrl,
+  urlValid,
+  setUrlValid,
+}: {
+  url: string;
+  setUrl: Dispatch<SetStateAction<string>>;
+  urlValid: boolean;
+  setUrlValid: Dispatch<SetStateAction<boolean>>;
+}) {
+  const urlRef = useRef<string>(url);
+
+  useEffect(() => {
+    if (urlRef.current.length > 0) {
+      setUrlValid(isURL(urlRef.current, { protocols: ['http', 'https'], require_protocol: true }));
+    }
+  }, [setUrlValid]);
+
   return (
-    <label className='relative block'>
-      <span className='absolute inset-y-0 start-2.5 flex items-center pointer-events-none'>
-        <svg className='fill-current stroke-current w-5 h-5' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'>
-          <path d='M633.417143 429.007238a174.567619 174.567619 0 0 1 0 246.857143l-155.306667 155.306667a186.709333 186.709333 0 1 1-264.045714-264.045715l76.483048-76.507428 51.73638 51.736381-76.507428 76.507428a113.566476 113.566476 0 1 0 160.597333 160.597334l155.306667-155.306667a101.424762 101.424762 0 0 0 0-143.408762z m208.603428-225.816381a186.709333 186.709333 0 0 1 0 264.045714L765.561905 543.744l-51.736381-51.712 76.507428-76.507429a113.566476 113.566476 0 1 0-160.597333-160.597333l-155.306667 155.306667a101.424762 101.424762 0 0 0 0 143.408762l-51.736381 51.736381a174.567619 174.567619 0 0 1 0-246.857143l155.306667-155.306667a186.709333 186.709333 0 0 1 264.045714 0z' />
-        </svg>
-      </span>
-      <input
-        type='url'
-        placeholder='Paste url here...'
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-        required={true}
-        className='input input-bordered rounded-lg w-full py-1 pl-9 pr-3 font-semibold subpixel-antialiased slashed-zero placeholder:italic placeholder:text-slate-400'
-      />
-      {url.length > 0 ? <ClearBtn clickHandler={() => setUrl('')} subClass='inset-y-3' /> : null}
-    </label>
+    <div className='flex flex-col'>
+      <label className='relative block'>
+        <span className='absolute inset-y-0 start-2.5 flex items-center pointer-events-none'>
+          <svg
+            className='fill-current stroke-current w-5 h-5'
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 1024 1024'
+          >
+            <path d='M633.417143 429.007238a174.567619 174.567619 0 0 1 0 246.857143l-155.306667 155.306667a186.709333 186.709333 0 1 1-264.045714-264.045715l76.483048-76.507428 51.73638 51.736381-76.507428 76.507428a113.566476 113.566476 0 1 0 160.597333 160.597334l155.306667-155.306667a101.424762 101.424762 0 0 0 0-143.408762z m208.603428-225.816381a186.709333 186.709333 0 0 1 0 264.045714L765.561905 543.744l-51.736381-51.712 76.507428-76.507429a113.566476 113.566476 0 1 0-160.597333-160.597333l-155.306667 155.306667a101.424762 101.424762 0 0 0 0 143.408762l-51.736381 51.736381a174.567619 174.567619 0 0 1 0-246.857143l155.306667-155.306667a186.709333 186.709333 0 0 1 264.045714 0z' />
+          </svg>
+        </span>
+        <input
+          type='url'
+          placeholder='Paste url here...'
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          onBlur={
+            url.length > 0
+              ? () => setUrlValid(isURL(url, { protocols: ['http', 'https'], require_protocol: true }))
+              : undefined
+          }
+          required={true}
+          className={clsx(
+            'input input-bordered rounded-lg w-full px-9 font-semibold subpixel-antialiased slashed-zero placeholder:italic placeholder:text-slate-400',
+            { 'input-error': !urlValid },
+          )}
+        />
+        {url.length > 0 ? (
+          <ClearBtn
+            clickHandler={() => {
+              setUrl('');
+              setUrlValid(true);
+            }}
+            isTextArea={false}
+          />
+        ) : null}
+      </label>
+      {urlValid ? null : (
+        <span className='label-text text-xs text-error pl-3 font-semibold'>It is not a valid url !</span>
+      )}
+    </div>
   );
 }
 
@@ -52,7 +103,7 @@ function MultiUrlsArea({ urls, setUrls }: { urls: string[]; setUrls: Dispatch<Se
         required={true}
         className='textarea textarea-bordered rounded-lg w-full py-1 px-2 h-48 max-h-80 font-semibold subpixel-antialiased slashed-zero placeholder:italic placeholder:text-slate-400'
       />
-      {urls.length > 0 ? <ClearBtn clickHandler={() => setUrls([])} subClass='top-2' /> : null}
+      {urls.length > 0 ? <ClearBtn clickHandler={() => setUrls([])} isTextArea={true} /> : null}
     </label>
   );
 }
@@ -65,6 +116,8 @@ export default function AddressBar() {
   const [url, setUrl] = useState<string>(addressBarState.url);
   const [urls, setUrls] = useState<string[]>(addressBarState.urls);
   const [isTextArea, setTextArea] = useState<boolean>(addressBarState.isTextArea);
+
+  const [urlValid, setUrlValid] = useState<boolean>(true);
 
   const [theWindow, setTheWindow] = useState<WebviewWindow>();
 
@@ -133,7 +186,7 @@ export default function AddressBar() {
         <div className='flex items-center gap-x-2'>
           <FormatsBtn />
 
-          <button onClick={handleDownload} className='btn btn-sm btn-success gap-x-2'>
+          <button onClick={handleDownload} disabled={!urlValid} className='btn btn-sm btn-success gap-x-2'>
             <svg
               className='fill-current stroke-current w-5 h-5'
               xmlns='http://www.w3.org/2000/svg'
@@ -147,7 +200,11 @@ export default function AddressBar() {
       </div>
 
       <div className='form-control'>
-        {isTextArea ? <MultiUrlsArea urls={urls} setUrls={setUrls} /> : <SingleUrlBar url={url} setUrl={setUrl} />}
+        {isTextArea ? (
+          <MultiUrlsArea urls={urls} setUrls={setUrls} />
+        ) : (
+          <SingleUrlBar url={url} setUrl={setUrl} urlValid={urlValid} setUrlValid={setUrlValid} />
+        )}
       </div>
     </div>
   );

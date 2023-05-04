@@ -21,13 +21,15 @@
     "react-is": "18.3.0-next-6eadbe0c4-20230425",
     "styled-components": "6.0.0-beta.15",
     "styled-jsx": "5.1.2",
-    "use-count-up": "3.0.1"
+    "use-count-up": "3.0.1",
+    "validator": "13.9.0"
   },
   "devDependencies": {
     "@tailwindcss/typography": "0.5.9",
     "@types/node": "18.16.1",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.1",
+    "@types/validator": "13.7.15",
     "@typescript-eslint/eslint-plugin": "5.59.1",
     "@typescript-eslint/parser": "5.59.1",
     "autoprefixer": "^10.4.14",
