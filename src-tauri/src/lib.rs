@@ -7,6 +7,7 @@ pub fn run() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             commands::start_download,
+            commands::get_ytdlp_conf,
             commands::update_ytdlp_conf,
             commands::update_app_conf,
         ])

@@ -6,3 +6,4 @@ out/
 build/
 node_modules/
 target/
+src-tauri/data/
