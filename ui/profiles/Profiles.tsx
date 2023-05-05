@@ -12,7 +12,7 @@ import Slider from './Slider';
 
 export default function Profiles() {
   const { profilesState } = useContext(ProfilesContext);
-  const initState = profilesState;
+  const initStateRef = useRef(profilesState);
   const stateRef = useRef(profilesState);
 
   useEffect(() => {
@@ -23,12 +23,13 @@ export default function Profiles() {
     async function invokeUpdateConf() {
       await invoke('update_ytdlp_conf', { confContent: JSON.stringify(stateRef.current) });
     }
+    const initState = initStateRef.current;
     return () => {
       if (!stateShallowEqual(initState, stateRef.current)) {
         invokeUpdateConf();
       }
     };
-  }, [initState]);
+  }, []);
 
   return (
     <div className='flex flex-col space-y-4 pr-4 h-screen overflow-y-auto'>

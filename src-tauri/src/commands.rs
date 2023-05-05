@@ -1,10 +1,10 @@
 use crate::config;
-use crate::yt_dlp::DownloadEvent;
+use crate::yt_dlp;
 use tauri::Window;
 
 #[tauri::command]
 pub async fn start_download(window: Window, target_url: String) {
-    let down = DownloadEvent { window, target_url };
+    let down = yt_dlp::DownloadEvent { window, target_url };
     down.download().await;
 }
 

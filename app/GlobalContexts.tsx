@@ -1,11 +1,32 @@
 'use client';
 
-import React, { createContext, Dispatch, useEffect, useReducer } from 'react';
-import type { UnlistenFn } from '@tauri-apps/api/event';
+import React, { createContext, Dispatch, useEffect, useReducer, useState, useRef, useContext } from 'react';
+import { invoke } from '@tauri-apps/api/tauri';
+import { UnlistenFn } from '@tauri-apps/api/event';
+import { WebviewWindow } from '@tauri-apps/api/window';
 import ytDlp from '../public/yt-dlp.svg';
 
 function defaultDispatch(): void {
   throw new Error('Dispatch function not implemented.');
+}
+
+/* GLOBAL */
+export const WindowContext = createContext<WebviewWindow | null>(null);
+
+function WindowContextProvider({ children }: { children: React.ReactNode }) {
+  const [theWindow, setTheWindow] = useState<WebviewWindow | null>(null);
+
+  useEffect(() => {
+    async function initWindow() {
+      const { appWindow } = await import('@tauri-apps/api/window');
+      setTheWindow(appWindow);
+    }
+    if (!theWindow) {
+      initWindow();
+    }
+  }, [theWindow]);
+
+  return <WindowContext.Provider value={theWindow}>{children}</WindowContext.Provider>;
 }
 
 /* HOMEPAGE */
@@ -59,35 +80,6 @@ const initProgressInfo: ProgressInfo = {
 };
 const allProgressInfo: AllProgressInfo = {};
 
-let unlistenHandler: Promise<UnlistenFn> | null = null;
-
-async function enrollProgressEvent() {
-  const { appWindow } = await import('@tauri-apps/api/window');
-  unlistenHandler = appWindow.listen<VideoInfoEvent | ProgressMsgEvent>('progress_msg', ({ payload }) => {
-    const { url } = payload;
-    if ((payload as ProgressMsgEvent).status !== undefined) {
-      const { status, downloaded_bytes_str, total_bytes_str, percent_str, speed_str } = payload as ProgressMsgEvent;
-      allProgressInfo[url] = {
-        ...allProgressInfo[url],
-        downloaded: downloaded_bytes_str,
-        total: status === 'ALLDONE' ? total_bytes_str : allProgressInfo[url].total,
-        percent: percent_str,
-        speed: speed_str,
-      };
-    } else {
-      const { title, uploader, thumbnail, extractor, predicted_size_str } = payload as VideoInfoEvent;
-      allProgressInfo[url] = {
-        ...allProgressInfo[url],
-        title,
-        uploader,
-        thumbnail,
-        extractor,
-        total: predicted_size_str,
-      };
-    }
-  });
-}
-
 function targetUrlsReducer(state: string[], action: TargetUrlsDispatchType): string[] {
   const isSingleUrl: boolean = typeof action.payload === 'string';
   switch (action.type) {
@@ -132,18 +124,53 @@ export const ProgressContext = createContext<{
 
 function ProgressContextProvider({ children }: { children: React.ReactNode }) {
   const [targetUrls, targetUrlsDispatch] = useReducer(targetUrlsReducer, []);
+  const [unlistenHandler, setUnlistenHandler] = useState<UnlistenFn | undefined>(undefined);
+  const unlistenRef = useRef(unlistenHandler);
+  const theWindow = useContext(WindowContext);
 
   useEffect(() => {
-    if (!unlistenHandler) {
+    unlistenRef.current = unlistenHandler;
+  }, [unlistenHandler]);
+
+  useEffect(() => {
+    async function enrollProgressEvent() {
+      const unlistenFunc = await theWindow?.listen<VideoInfoEvent | ProgressMsgEvent>('progress_msg', ({ payload }) => {
+        const { url } = payload;
+        if ((payload as ProgressMsgEvent).status !== undefined) {
+          const { status, downloaded_bytes_str, total_bytes_str, percent_str, speed_str } = payload as ProgressMsgEvent;
+          allProgressInfo[url] = {
+            ...allProgressInfo[url],
+            downloaded: downloaded_bytes_str,
+            total: status === 'ALLDONE' ? total_bytes_str : allProgressInfo[url].total,
+            percent: percent_str,
+            speed: speed_str,
+          };
+        } else {
+          const { title, uploader, thumbnail, extractor, predicted_size_str } = payload as VideoInfoEvent;
+          allProgressInfo[url] = {
+            ...allProgressInfo[url],
+            title,
+            uploader,
+            thumbnail,
+            extractor,
+            total: predicted_size_str,
+          };
+        }
+      });
+      setUnlistenHandler(unlistenFunc);
+    }
+
+    if (!unlistenRef.current) {
       enrollProgressEvent();
     }
 
     return () => {
-      if (unlistenHandler) {
-        unlistenHandler.then((handler) => handler());
+      if (unlistenRef.current) {
+        unlistenRef.current();
+        unlistenRef.current = undefined;
       }
     };
-  }, []);
+  }, [theWindow]);
 
   return (
     <ProgressContext.Provider value={{ targetUrls, allProgressInfo, targetUrlsDispatch }}>
@@ -243,11 +270,16 @@ interface ProfilesStateType {
   [key: string]: string | boolean;
 }
 
+interface YtDlpConfEvent {
+  yt_dlp_conf_content: ProfilesStateType;
+}
+
 interface ProfilesDispatchType {
   type: string;
   opt: string;
   value: string | boolean;
   defaultValue: string | boolean;
+  initConf?: ProfilesStateType;
 }
 
 function profilesReducer(state: ProfilesStateType, action: ProfilesDispatchType): ProfilesStateType {
@@ -259,6 +291,8 @@ function profilesReducer(state: ProfilesStateType, action: ProfilesDispatchType)
       }
       return { ...state, [opt]: value };
     }
+    case 'initProfiles':
+      return action.initConf ?? state;
     default:
       return state;
   }
@@ -270,20 +304,64 @@ export const ProfilesContext = createContext<{
 }>({ profilesState: {}, profilesDispatch: defaultDispatch });
 
 function ProfilesContextProvider({ children }: { children: React.ReactNode }) {
-  const initConfProfiles: ProfilesStateType = {};
-  const [profilesState, profilesDispatch] = useReducer(profilesReducer, initConfProfiles);
+  const [profilesState, profilesDispatch] = useReducer(profilesReducer, {});
+  const [unlistenHandler, setUnlistenHandler] = useState<UnlistenFn | undefined>(undefined);
+  const unlistenRef = useRef(unlistenHandler);
+  const theWindow = useContext(WindowContext);
+
+  useEffect(() => {
+    unlistenRef.current = unlistenHandler;
+  }, [unlistenHandler]);
+
+  useEffect(() => {
+    async function enrollConfEvent() {
+      const unlistenFunc = await theWindow?.once<YtDlpConfEvent>('get_ytdlp_conf', ({ payload }) => {
+        profilesDispatch({
+          type: 'initProfiles',
+          opt: '',
+          value: '',
+          defaultValue: '',
+          initConf: payload.yt_dlp_conf_content,
+        });
+      });
+      setUnlistenHandler(unlistenFunc);
+    }
+
+    if (!unlistenRef.current) {
+      enrollConfEvent();
+    }
+
+    return () => {
+      if (unlistenRef.current) {
+        unlistenRef.current();
+        unlistenRef.current = undefined;
+      }
+    };
+  }, [theWindow]);
+
+  useEffect(() => {
+    async function invokeGetConf() {
+      await invoke('get_ytdlp_conf', { window: theWindow });
+    }
+
+    if (theWindow) {
+      invokeGetConf();
+    }
+  }, [theWindow]);
 
   return <ProfilesContext.Provider value={{ profilesState, profilesDispatch }}>{children}</ProfilesContext.Provider>;
 }
 
 export default function GlobalContextsProvider({ children }: { children: React.ReactNode }) {
   return (
-    <DownProfileContextProvider>
-      <AddressBarContextProvider>
-        <ProfilesContextProvider>
-          <ProgressContextProvider>{children}</ProgressContextProvider>
-        </ProfilesContextProvider>
-      </AddressBarContextProvider>
-    </DownProfileContextProvider>
+    <WindowContextProvider>
+      <DownProfileContextProvider>
+        <AddressBarContextProvider>
+          <ProfilesContextProvider>
+            <ProgressContextProvider>{children}</ProgressContextProvider>
+          </ProfilesContextProvider>
+        </AddressBarContextProvider>
+      </DownProfileContextProvider>
+    </WindowContextProvider>
   );
 }

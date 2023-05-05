@@ -1,7 +1,6 @@
 import { Dispatch, MouseEventHandler, SetStateAction, useContext, useState, useEffect, useRef } from 'react';
-import { AddressBarContext, ProgressContext } from 'app/GlobalContexts';
+import { AddressBarContext, ProgressContext, WindowContext } from 'app/GlobalContexts';
 import { invoke } from '@tauri-apps/api/tauri';
-import { WebviewWindow } from '@tauri-apps/api/window';
 import { stateShallowEqual } from '@/lib/utils';
 import FormatsBtn from '../Formats';
 import isURL from 'validator/lib/isURL';
@@ -109,6 +108,7 @@ function MultiUrlsArea({ urls, setUrls }: { urls: string[]; setUrls: Dispatch<Se
 }
 
 export default function AddressBar() {
+  const theWindow = useContext(WindowContext);
   const { targetUrlsDispatch } = useContext(ProgressContext);
   const { addressBarState, addressBarDispatch } = useContext(AddressBarContext);
   const stateRef = useRef(addressBarState);
@@ -118,8 +118,6 @@ export default function AddressBar() {
   const [isTextArea, setTextArea] = useState<boolean>(addressBarState.isTextArea);
 
   const [urlValid, setUrlValid] = useState<boolean>(true);
-
-  const [theWindow, setTheWindow] = useState<WebviewWindow>();
 
   async function handleDownload() {
     const payload = isTextArea ? urls : url;
@@ -143,16 +141,6 @@ export default function AddressBar() {
       }
     };
   }, [addressBarState, addressBarDispatch]);
-
-  useEffect(() => {
-    async function initWindow() {
-      const { appWindow } = await import('@tauri-apps/api/window');
-      setTheWindow(appWindow);
-    }
-    if (!theWindow) {
-      initWindow();
-    }
-  }, [theWindow]);
 
   return (
     <div className='flex flex-col bg-base-200 rounded-md p-2 space-y-2'>
