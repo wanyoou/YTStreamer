@@ -4,15 +4,9 @@ use std::{
     io::{BufRead, BufReader, BufWriter, Read, Write},
     path::Path,
 };
-use tauri::Window;
 
 const YT_DLP_CONF: &str = "data/yt-dlp.conf";
 const YT_DLP_CONF_NEW: &str = "data/yt-dlp.conf.new";
-
-#[derive(Clone, serde::Serialize)]
-struct YtDlpConfEvent {
-    yt_dlp_conf_content: Map<String, Value>,
-}
 
 fn write_contents(writer: &mut impl Write, mut opt: String, value: Value) {
     if !opt.starts_with("--") {
@@ -49,17 +43,9 @@ fn string_to_json(content: String) -> Map<String, Value> {
     map_content
 }
 
-pub async fn emit_ytdlp_conf(window: Window) {
+pub async fn emit_ytdlp_conf() -> Map<String, Value> {
     if !Path::new(YT_DLP_CONF).exists() {
-        window
-            .emit(
-                "get_ytdlp_conf",
-                YtDlpConfEvent {
-                    yt_dlp_conf_content: Map::new(),
-                },
-            )
-            .unwrap();
-        return;
+        return Map::new();
     }
 
     let yt_dlp_conf = OpenOptions::new().read(true).open(YT_DLP_CONF).unwrap();
@@ -68,14 +54,7 @@ pub async fn emit_ytdlp_conf(window: Window) {
         .read_to_string(&mut content)
         .unwrap();
 
-    window
-        .emit(
-            "get_ytdlp_conf",
-            YtDlpConfEvent {
-                yt_dlp_conf_content: string_to_json(content),
-            },
-        )
-        .unwrap();
+    string_to_json(content)
 }
 
 pub async fn upgrade_ytdlp_conf(conf_content: String) {

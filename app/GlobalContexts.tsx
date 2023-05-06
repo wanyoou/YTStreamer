@@ -160,7 +160,7 @@ function ProgressContextProvider({ children }: { children: React.ReactNode }) {
       setUnlistenHandler(unlistenFunc);
     }
 
-    if (!unlistenRef.current) {
+    if (!unlistenRef.current && theWindow) {
       enrollProgressEvent();
     }
 
@@ -270,10 +270,6 @@ interface ProfilesStateType {
   [key: string]: string | boolean;
 }
 
-interface YtDlpConfEvent {
-  yt_dlp_conf_content: ProfilesStateType;
-}
-
 interface ProfilesDispatchType {
   type: string;
   opt: string;
@@ -305,43 +301,20 @@ export const ProfilesContext = createContext<{
 
 function ProfilesContextProvider({ children }: { children: React.ReactNode }) {
   const [profilesState, profilesDispatch] = useReducer(profilesReducer, {});
-  const [unlistenHandler, setUnlistenHandler] = useState<UnlistenFn | undefined>(undefined);
-  const unlistenRef = useRef(unlistenHandler);
   const theWindow = useContext(WindowContext);
 
   useEffect(() => {
-    unlistenRef.current = unlistenHandler;
-  }, [unlistenHandler]);
-
-  useEffect(() => {
-    async function enrollConfEvent() {
-      const unlistenFunc = await theWindow?.once<YtDlpConfEvent>('get_ytdlp_conf', ({ payload }) => {
+    async function invokeGetConf() {
+      const confContent = await invoke<ProfilesStateType>('get_ytdlp_conf');
+      if (Object.keys(confContent).length > 0) {
         profilesDispatch({
           type: 'initProfiles',
           opt: '',
           value: '',
           defaultValue: '',
-          initConf: payload.yt_dlp_conf_content,
+          initConf: confContent,
         });
-      });
-      setUnlistenHandler(unlistenFunc);
-    }
-
-    if (!unlistenRef.current) {
-      enrollConfEvent();
-    }
-
-    return () => {
-      if (unlistenRef.current) {
-        unlistenRef.current();
-        unlistenRef.current = undefined;
       }
-    };
-  }, [theWindow]);
-
-  useEffect(() => {
-    async function invokeGetConf() {
-      await invoke('get_ytdlp_conf', { window: theWindow });
     }
 
     if (theWindow) {

@@ -1,5 +1,6 @@
 use crate::config;
 use crate::yt_dlp;
+use serde_json::{Map, Value};
 use tauri::Window;
 
 #[tauri::command]
@@ -9,8 +10,8 @@ pub async fn start_download(window: Window, target_url: String) {
 }
 
 #[tauri::command]
-pub async fn get_ytdlp_conf(window: Window) {
-    config::emit_ytdlp_conf(window).await;
+pub async fn get_ytdlp_conf() -> Map<String, Value> {
+    config::emit_ytdlp_conf().await
 }
 
 #[tauri::command]

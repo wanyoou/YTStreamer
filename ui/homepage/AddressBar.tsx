@@ -1,5 +1,5 @@
 import { Dispatch, MouseEventHandler, SetStateAction, useContext, useState, useEffect, useRef } from 'react';
-import { AddressBarContext, ProgressContext, WindowContext } from 'app/GlobalContexts';
+import { AddressBarContext, ProgressContext } from 'app/GlobalContexts';
 import { invoke } from '@tauri-apps/api/tauri';
 import { stateShallowEqual } from '@/lib/utils';
 import FormatsBtn from '../Formats';
@@ -108,7 +108,6 @@ function MultiUrlsArea({ urls, setUrls }: { urls: string[]; setUrls: Dispatch<Se
 }
 
 export default function AddressBar() {
-  const theWindow = useContext(WindowContext);
   const { targetUrlsDispatch } = useContext(ProgressContext);
   const { addressBarState, addressBarDispatch } = useContext(AddressBarContext);
   const stateRef = useRef(addressBarState);
@@ -124,10 +123,7 @@ export default function AddressBar() {
     targetUrlsDispatch({ type: 'targetUrlsAdd', payload });
     isTextArea ? setUrls([]) : setUrl('');
 
-    await invoke('start_download', {
-      window: theWindow,
-      targetUrl: payload,
-    });
+    await invoke('start_download', { targetUrl: payload });
   }
 
   useEffect(() => {
