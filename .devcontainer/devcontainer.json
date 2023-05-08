@@ -1,9 +1,27 @@
 {
+  "name": "YTStreamer",
   "build": {
     "dockerfile": "Dockerfile"
   },
   "features": {
-    "ghcr.io/devcontainers/features/desktop-lite:1": {}
+    "ghcr.io/devcontainers/features/git-lfs:1": {},
+    "ghcr.io/devcontainers/features/desktop-lite:1": {},
+    "ghcr.io/devcontainers-contrib/features/pnpm:2": {}
   },
-  "forwardPorts": [5901]
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next",
+        "dbaeumer.vscode-eslint",
+        "github.copilot-nightly",
+        "yzhang.markdown-all-in-one",
+        "esbenp.prettier-vscode",
+        "rust-lang.rust-analyzer",
+        "bradlc.vscode-tailwindcss"
+      ]
+    }
+  },
+  "forwardPorts": [5901],
+  "postCreateCommand": "pnpm update",
+  "remoteUser": "vscode"
 }
