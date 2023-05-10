@@ -34,7 +34,7 @@ export default function Profiles() {
   return (
     <div className='flex flex-col space-y-4 pr-4 h-screen overflow-y-auto'>
       {options.map((segment) => (
-        <div key={segment.section} className='flex flex-col gap-y-1'>
+        <div key={segment.section} id={segment.section} className='flex flex-col gap-y-1'>
           {segment.section}
           <div className='rounded-md bg-base-200'>
             {segment.opts.map((option) => {

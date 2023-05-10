@@ -8,6 +8,16 @@ use std::{
 const YT_DLP_CONF: &str = "data/yt-dlp.conf";
 const YT_DLP_CONF_NEW: &str = "data/yt-dlp.conf.new";
 
+fn remove_quotes(s: &str) -> String {
+    if s.starts_with('"') && s.ends_with('"') {
+        let inner_length = s.len() - 2;
+        if inner_length > 0 {
+            return s[1..inner_length + 1].to_string();
+        }
+    }
+    s.to_string()
+}
+
 fn write_contents(writer: &mut impl Write, mut opt: String, value: Value) {
     if !opt.starts_with("--") {
         opt = format!("--{opt}");
@@ -17,7 +27,7 @@ fn write_contents(writer: &mut impl Write, mut opt: String, value: Value) {
             writeln!(writer, "{opt}").unwrap();
         }
     } else {
-        let new_line = format!("{opt} {}", value.as_str().unwrap().trim_matches('"'));
+        let new_line = format!("{opt} {}", remove_quotes(value.as_str().unwrap()));
         writeln!(writer, "{new_line}").unwrap();
     }
 }

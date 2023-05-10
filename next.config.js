@@ -5,7 +5,7 @@ const nextConfig = {
   swcMinify: true,
   experimental: {
     appDir: true,
-    // scrollRestoration: true,
+    ...(process.env.NODE_ENV === 'production' && { scrollRestoration: true }),
   },
   // Note: This experimental feature is required to use NextJS Image in SSG mode.
   // See https://nextjs.org/docs/messages/export-image-api for different workarounds.
