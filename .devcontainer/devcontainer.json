@@ -1,12 +1,19 @@
 {
   "name": "YTStreamer",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "context": "."
   },
   "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      "installOhMyZsh": false,
+      "username": "vscode",
+      "userUid": "1000",
+      "userGid": "1000"
+    },
     "ghcr.io/devcontainers/features/git-lfs:1": {},
-    "ghcr.io/devcontainers/features/desktop-lite:1": {},
-    "ghcr.io/devcontainers-contrib/features/pnpm:2": {}
+    "ghcr.io/devcontainers/features/desktop-lite:1": {}
   },
   "customizations": {
     "vscode": {
@@ -18,10 +25,24 @@
         "esbenp.prettier-vscode",
         "rust-lang.rust-analyzer",
         "bradlc.vscode-tailwindcss"
-      ]
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "files.watcherExclude": {
+          "**/target/**": true,
+          "**/node_modules/**": true
+        }
+      }
     }
   },
+  "containerEnv": {
+    "PATH": "${PATH}:${CARGO_HOME}/bin:/usr/local/fnm"
+  },
+  "capAdd": ["SYS_PTRACE"],
+  "securityOpt": ["seccomp=unconfined"],
+  "runArgs": ["--entrypoint", "/bin/bash"],
   "forwardPorts": [5901],
-  "postCreateCommand": "pnpm update",
+  "overrideCommand": false,
+  "postCreateCommand": "bash -i install-env.sh",
   "remoteUser": "vscode"
 }

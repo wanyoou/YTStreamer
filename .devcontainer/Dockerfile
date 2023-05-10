@@ -1,31 +1,28 @@
-# Debian(bullseye)
-FROM mcr.microsoft.com/devcontainers/rust:latest
+ARG VARIANT="bullseye"
+FROM buildpack-deps:${VARIANT}-curl
 
-ARG USERNAME=vscode
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
+ARG DEBIAN_FRONTEND=noninteractive
+ARG FNMPATH=/usr/local/fnm
+ENV CARGO_HOME=/usr/local/cargo
+ENV RUSTUP_HOME=/usr/local/rustup
 
-RUN export DEBIAN_FRONTEND=noninteractive \
-    && groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    && apt update && apt upgrade -y \
+RUN apt update \
     && apt install -y --no-install-recommends \
-        curl \
-        neovim \
-        pkg-config \
-        sudo \
-        unzip \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME \
+        unzip build-essential clang-13 \
+        libwebkit2gtk-4.0-dev libssl-dev \
+        libgtk-3-dev libayatana-appindicator3-dev \
+        librsvg2-dev \
     && apt autoremove -y \
     && apt clean -y \
     && rm -rf /var/lib/apt/lists/*
 
-# [Optional] Set the default user. Omit if you want to keep the default as root.
-USER $USERNAME
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- \
+    -y --default-toolchain beta --profile complete --no-modify-path
 
-# Install fnm, nodejs, pnpm
-RUN curl -fsSL https://fnm.vercel.app/install | bash \
-    && fnm install --latest \
-    && corepack enable \
-    && corepack prepare pnpm@latest --activate
+SHELL ["/bin/bash", "-c"]
+# Install fnm
+RUN curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir $FNMPATH --skip-shell
+
+ENTRYPOINT ["/bin/bash"]
+# CMD ["sleep", "infinity"]
