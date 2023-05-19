@@ -7,12 +7,8 @@
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": false,
-      "installOhMyZsh": false,
-      "username": "vscode",
-      "userUid": "1000",
-      "userGid": "1000"
+      "installOhMyZsh": false
     },
-    "ghcr.io/devcontainers/features/git-lfs:1": {},
     "ghcr.io/devcontainers/features/desktop-lite:1": {}
   },
   "customizations": {
@@ -35,14 +31,13 @@
       }
     }
   },
-  "containerEnv": {
-    "PATH": "${PATH}:${CARGO_HOME}/bin:/usr/local/fnm"
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:${containerEnv:CARGO_HOME}/bin:${containerEnv:FNM_PATH}"
   },
   "capAdd": ["SYS_PTRACE"],
   "securityOpt": ["seccomp=unconfined"],
-  "runArgs": ["--entrypoint", "/bin/bash"],
   "forwardPorts": [5901],
-  "overrideCommand": false,
-  "postCreateCommand": "bash -i install-env.sh",
+  // "overrideCommand": false,
+  "postCreateCommand": ["/bin/bash", "-i", ".devcontainer/install-env.sh"],
   "remoteUser": "vscode"
 }
