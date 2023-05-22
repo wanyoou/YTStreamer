@@ -11,8 +11,10 @@ RUN apt update \
     && apt install -y --no-install-recommends \
         build-essential clang-13 \
         libwebkit2gtk-4.1-dev libssl-dev \
+        libwebkit2gtk-4.0-dev \
         libgtk-3-dev libayatana-appindicator3-dev \
         librsvg2-dev neovim \
+        libsoup2.4-dev libjavascriptcoregtk-4.0-dev \
     && apt autoremove -y \
     && apt clean -y \
     && rm -rf /var/lib/apt/lists/*
