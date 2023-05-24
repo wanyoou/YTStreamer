@@ -1,28 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useContext } from 'react';
+import { ProfilesNavContext } from 'app/GlobalContexts';
 import { options } from '@/lib/options';
 import clsx from 'clsx';
-import Link from 'next/link';
 
 export default function ProfilesNav() {
-  const [isActive, setIsActive] = useState<string>(options[0].section);
+  const { currentInViewSections } = useContext(ProfilesNavContext);
+  const isActive = currentInViewSections[0];
 
   return (
     <div className='flex flex-col place-content-center space-y-2'>
       {options.map((segment) => (
-        <Link
+        <a
           key={segment.section}
           href={`/profiles#${segment.section}`}
-          scroll={false}
-          onClick={() => (isActive === segment.section ? null : setIsActive(segment.section))}
           className={clsx('cursor-pointer text-xs', {
             'font-semibold': isActive === segment.section,
             'hover:font-semibold': isActive !== segment.section,
           })}
         >
           {segment.section}
-        </Link>
+        </a>
       ))}
     </div>
   );

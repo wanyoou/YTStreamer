@@ -28,6 +28,9 @@ dependencies:
   react-dom:
     specifier: 18.3.0-next-6eadbe0c4-20230425
     version: 18.3.0-next-6eadbe0c4-20230425(react@18.3.0-next-6eadbe0c4-20230425)
+  react-intersection-observer:
+    specifier: 9.4.3
+    version: 9.4.3(react@18.3.0-next-6eadbe0c4-20230425)
   react-is:
     specifier: 18.3.0-next-6eadbe0c4-20230425
     version: 18.3.0-next-6eadbe0c4-20230425
@@ -3960,6 +3963,14 @@ packages:
       loose-envify: 1.4.0
       react: 18.3.0-next-6eadbe0c4-20230425
       scheduler: 0.24.0-next-6eadbe0c4-20230425
+    dev: false
+
+  /react-intersection-observer@9.4.3(react@18.3.0-next-6eadbe0c4-20230425):
+    resolution: {integrity: sha512-WNRqMQvKpupr6MzecAQI0Pj0+JQong307knLP4g/nBex7kYfIaZsPpXaIhKHR+oV8z+goUbH9e10j6lGRnTzlQ==}
+    peerDependencies:
+      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.3.0-next-6eadbe0c4-20230425
     dev: false
 
   /react-is@16.13.1:

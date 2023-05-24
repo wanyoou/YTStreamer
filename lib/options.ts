@@ -8,7 +8,7 @@ export type OptInfo = {
   description?: string;
 };
 
-type OptItems = {
+export type OptItems = {
   section: string;
   opts: OptInfo[];
 };

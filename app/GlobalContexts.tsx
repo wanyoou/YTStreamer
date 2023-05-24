@@ -325,14 +325,61 @@ function ProfilesContextProvider({ children }: { children: React.ReactNode }) {
   return <ProfilesContext.Provider value={{ profilesState, profilesDispatch }}>{children}</ProfilesContext.Provider>;
 }
 
+interface inViewSectionsDispatchType {
+  type: string;
+  payload: { section: string; inView: boolean };
+}
+
+function profilesNavReducer(state: string[], action: inViewSectionsDispatchType): string[] {
+  switch (action.type) {
+    case 'updateProfilesNav': {
+      const { section, inView } = action.payload;
+      if (inView) {
+        if (!state.includes(section)) {
+          state.push(section);
+        } else {
+          state = state.filter((s) => s !== section);
+          state.push(section);
+        }
+      } else {
+        state = state.filter((s) => s !== section);
+      }
+
+      return state;
+    }
+    default:
+      return state;
+  }
+}
+
+export const ProfilesNavContext = createContext<{
+  currentInViewSections: string[];
+  inViewSectionsDispatch: Dispatch<inViewSectionsDispatchType>;
+}>({
+  currentInViewSections: [],
+  inViewSectionsDispatch: defaultDispatch,
+});
+
+function ProfilesNavContextProvider({ children }: { children: React.ReactNode }) {
+  const [currentInViewSections, inViewSectionsDispatch] = useReducer(profilesNavReducer, []);
+
+  return (
+    <ProfilesNavContext.Provider value={{ currentInViewSections, inViewSectionsDispatch }}>
+      {children}
+    </ProfilesNavContext.Provider>
+  );
+}
+
 export default function GlobalContextsProvider({ children }: { children: React.ReactNode }) {
   return (
     <WindowContextProvider>
       <DownProfileContextProvider>
         <AddressBarContextProvider>
-          <ProfilesContextProvider>
-            <ProgressContextProvider>{children}</ProgressContextProvider>
-          </ProfilesContextProvider>
+          <ProfilesNavContextProvider>
+            <ProfilesContextProvider>
+              <ProgressContextProvider>{children}</ProgressContextProvider>
+            </ProfilesContextProvider>
+          </ProfilesNavContextProvider>
         </AddressBarContextProvider>
       </DownProfileContextProvider>
     </WindowContextProvider>
