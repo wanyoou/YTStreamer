@@ -5,9 +5,17 @@ import { ProfilesNavContext } from 'app/GlobalContexts';
 import { options } from '@/lib/options';
 import clsx from 'clsx';
 
+let isActive: string;
+
 export default function ProfilesNav() {
   const { currentInViewSections } = useContext(ProfilesNavContext);
-  const isActive = currentInViewSections[0];
+
+  for (const seg of options) {
+    if (currentInViewSections.includes(seg.section)) {
+      isActive = seg.section;
+      break;
+    }
+  }
 
   return (
     <div className='flex flex-col place-content-center space-y-2'>

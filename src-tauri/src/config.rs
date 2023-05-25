@@ -4,9 +4,11 @@ use std::{
     io::{BufRead, BufReader, BufWriter, Read, Write},
     path::Path,
 };
+use toml_edit::{self, Document, Item};
 
 const YT_DLP_CONF: &str = "data/yt-dlp.conf";
 const YT_DLP_CONF_NEW: &str = "data/yt-dlp.conf.new";
+const CONFIG_TOML: &str = "data/config.toml";
 
 fn remove_quotes(s: &str) -> String {
     if s.starts_with('"') && s.ends_with('"') {
@@ -126,4 +128,25 @@ pub async fn upgrade_ytdlp_conf(conf_content: String) {
     fs::rename(YT_DLP_CONF_NEW, YT_DLP_CONF).unwrap();
 }
 
-pub async fn upgrade_app_conf(conf_content: String) {}
+pub async fn upgrade_app_conf(conf_content: String) {
+    let json_content: Map<String, Value> = serde_json::from_str(conf_content.as_str()).unwrap();
+
+    let config = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create(true)
+        .open(CONFIG_TOML)
+        .unwrap();
+
+    let mut buffer = String::new();
+    BufReader::new(config).read_to_string(&mut buffer).unwrap();
+    let mut content = buffer.parse::<Document>().unwrap();
+
+    for (key, value) in json_content.iter() {
+        for (k, v) in value.as_object().unwrap().iter() {
+            content[key][k] = Item::Value(v.to_string().parse::<toml_edit::Value>().unwrap());
+        }
+    }
+
+    fs::write(CONFIG_TOML, content.to_string()).unwrap();
+}

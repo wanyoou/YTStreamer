@@ -1,46 +1,51 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 
-export const ThemeSwitcher = () => {
+function ThemeSwitcherIcons() {
   const { setTheme } = useTheme();
 
   return (
-    <div className='btn-group btn-group-horizontal'>
+    <div className='btn-group'>
       <button className='btn gap-2' onClick={() => setTheme('light')}>
-        <svg
-          className='fill-current w-5 h-5'
-          xmlns='http://www.w3.org/2000/svg'
-          viewBox='0 0 24 24'
-          stroke='currentColor'
-        >
+        <svg className='fill-current stroke-current w-5 h-5' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
           <path d='M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z' />
         </svg>
         LIGHT
       </button>
       <button className='btn gap-2' onClick={() => setTheme('dark')}>
-        <svg
-          className='fill-current w-5 h-5'
-          xmlns='http://www.w3.org/2000/svg'
-          viewBox='0 0 24 24'
-          stroke='currentColor'
-        >
+        <svg className='fill-current stroke-current w-5 h-5' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
           <path d='M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z' />
         </svg>
         DARK
       </button>
       <button className='btn gap-2' onClick={() => setTheme('system')}>
-        <svg
-          className='fill-current w-5 h-5'
-          xmlns='http://www.w3.org/2000/svg'
-          viewBox='0 0 1024 1024'
-          stroke='currentColor'
-        >
+        <svg className='fill-current stroke-current w-5 h-5' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'>
           <path d='M320 85.333333c-76.373333 49.066667-128 135.68-128 234.666667s51.626667 185.6 129.28 234.666667C190.293333 554.666667 85.333333 449.706667 85.333333 320A234.666667 234.666667 0 0 1 320 85.333333m493.653333 64l61.013334 61.013334L210.346667 874.666667 149.333333 813.653333 813.653333 149.333333m-263.68 103.68L486.826667 213.333333 425.386667 256l17.92-72.533333L384 138.24l74.666667-5.12 24.746666-70.4L512 132.266667l73.813333 1.28-57.6 48.213333 21.76 71.253333m-140.8 154.026667l-49.493333-31.146667-47.786667 33.28 14.506667-56.32-46.506667-35.413333 58.026667-3.84 19.2-55.04 21.76 54.186667 58.026667 1.28-44.8 37.12 17.066666 55.893333M810.666667 576a234.666667 234.666667 0 0 1-234.666667 234.666667c-52.053333 0-100.266667-17.066667-139.093333-45.653334l328.106666-328.106666c28.586667 38.826667 45.653333 87.04 45.653334 139.093333m-187.733334 280.746667l118.186667-49.066667-10.24 142.933333-107.946667-93.866666m184.746667-115.2l49.066667-118.186667 93.866666 108.373333-142.933333 9.813334m49.066667-211.626667l-48.64-118.613333 142.506666 10.24-93.866666 108.373333M410.88 807.68l118.186667 49.066667-107.946667 93.44-10.24-142.506667z' />
         </svg>
         SYSTEM
       </button>
     </div>
   );
-};
+}
+
+function ThemeSwitcher() {
+  return (
+    <div className='form-control'>
+      <label className='label rounded-md py-1 hover:bg-neutral'>
+        Theme Mode
+        <ThemeSwitcherIcons />
+      </label>
+    </div>
+  );
+}
+
+export default function GeneralSettings() {
+  return (
+    <div className='flex flex-col gap-y-1'>
+      General
+      <div className='rounded-md bg-base-200'>
+        <ThemeSwitcher />
+      </div>
+    </div>
+  );
+}
