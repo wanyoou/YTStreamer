@@ -167,7 +167,7 @@ export default function AddressBar() {
           </div>
         </label>
 
-        <div className='flex items-center gap-x-2'>
+        <div className='flex flex-row items-center gap-x-2'>
           <FormatsBtn />
 
           <button onClick={handleDownload} disabled={!urlValid} className='btn btn-sm btn-success gap-x-2'>

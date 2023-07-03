@@ -8,7 +8,7 @@ module.exports = {
     themes: [
       {
         cupcake: {
-          ...require('daisyui/src/colors/themes')['[data-theme=cupcake]'],
+          ...require('daisyui/src/theming/themes')['[data-theme=cupcake]'],
           primary: '#DEB6AB',
           'primary-focus': '#AC7D88',
           'primary-content': '#85586F',
@@ -21,9 +21,9 @@ module.exports = {
           'base-content': '#674188',
         },
       },
-      'business',
+      'halloween',
     ],
     logs: false,
-    darkTheme: 'business',
+    darkTheme: 'halloween',
   },
 };

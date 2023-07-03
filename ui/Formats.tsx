@@ -105,7 +105,7 @@ export default function FormatsBtn() {
 
   return (
     <div className='dropdown dropdown-bottom dropdown-end'>
-      <label tabIndex={0} className='btn btn-sm'>
+      <label tabIndex={0} className='btn btn-outline btn-sm'>
         {format}
       </label>
       <div tabIndex={0} className='dropdown-content rounded-box shadow-md bg-base-200 w-max p-2'>
