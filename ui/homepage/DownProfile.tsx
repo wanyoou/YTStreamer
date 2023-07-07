@@ -172,7 +172,7 @@ export default function DownProfile() {
 
       <div className='relative flex justify-center items-center col-span-6'>
         <hr className='my-3 h-0.5 w-full border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:opacity-100' />
-        <label className='btn btn-xs btn-outline w-1/5 absolute h-full z-10 swap'>
+        <label className='btn btn-xs btn-outline w-1/5 absolute h-full swap'>
           <input type='checkbox' onChange={() => setShowMore(!showMore)} />
           <div className='swap-off flex items-center gap-x-2'>
             More
